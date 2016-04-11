@@ -1,0 +1,39 @@
+vagrant up
+1. yum install https://grafanarel.s3.amazonaws.com/builds/grafana-2.6.0-1.x86_64.rpm
+2. systemctl enable grafana-server.service
+3. reboot
+4. yum install graphite-web -y
+5. change in /etc/graphite-web/local-settings.py to STORAGE_DIR = '/var/lib/graphite'
+	systemctl restart httpd
+6. cd /var/lib/graphite; django-admin syncdb --settings graphite.settings
+
+In case you want to get access to graphite-web you have to do following instructions:
+
+7. change /etc/httpd/conf/httpd.conf
+Listen 80
+add line
+Listen 81
+
+and change in /etc/httpd/conf.d/graphite-vhost.conf
+
+<VirtualHost *:80>
+change to
+<VirtualHost *:81> Header set Access-Control-Allow-Origin "*"
+Header set Access-Control-Allow-Methods "GET, OPTIONS"
+Header set Access-Control-Allow-Headers "origin, authorization, accept"
+
+between <Directory> element
+<Directory "/usr/share/graphite/"> 
+Options All
+AllowOverride All
+Require all granted
+</Directory>
+
+8. systemctl restart httpd
+
+now you can access to grafana and graphite-web by web browser by following ips:
+graphite-web - 127.0.0.1:81
+grafana 127.0.0.1:3000
+
+remember to forward ports in virtual host if you want to get access on host
+
