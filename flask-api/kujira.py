@@ -1,9 +1,10 @@
+#!/usr/bin/env python
+
 import argparse
 import json
 
-from flask import Flask
-
 from AuthenticatedHttpClient import AuthenticatedHttpClient
+from flask import Flask
 
 app = Flask(__name__)
 
