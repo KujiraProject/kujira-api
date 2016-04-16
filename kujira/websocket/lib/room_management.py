@@ -7,8 +7,8 @@ Manages users in each room and keeps track of their number.
 
 # Instance of SocketIO class
 from kujira import SOCKETIO
-from kujira.websocket.event_notification import EventNotificationThread
-from kujira.websocket.diagram_notification import DiagramNotificationThread
+from kujira.websocket.lib.event_notification import EventNotificationThread
+from kujira.websocket.lib.diagram_notification import DiagramNotificationThread
 from kujira.websocket import LOGGER
 
 # Description of each room

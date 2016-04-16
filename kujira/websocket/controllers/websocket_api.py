@@ -8,7 +8,7 @@ server won't receive any WEB client messages.
 """
 from flask import request
 from flask_socketio import join_room, leave_room, disconnect
-from kujira.websocket.room_management import add_user_to_room, \
+from kujira.websocket.lib.room_management import add_user_to_room, \
     remove_user_from_room, remove_user
 # Instance of SocketIO class
 from kujira import SOCKETIO

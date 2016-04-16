@@ -5,7 +5,7 @@ Defines class used to periodically send diagram notifications via websocket.
 Temporary implementation.
 """
 
-from kujira.websocket.notification_thread import NotificationThread
+from kujira.websocket.lib.notification_thread import NotificationThread
 
 
 class DiagramNotificationThread(NotificationThread):

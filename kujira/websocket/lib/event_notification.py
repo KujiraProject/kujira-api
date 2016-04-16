@@ -4,7 +4,7 @@ Event notification
 Defines class used to periodically send event notifications via websocket.
 """
 
-from kujira.websocket.notification_thread import NotificationThread
+from kujira.websocket.lib.notification_thread import NotificationThread
 
 
 class EventNotificationThread(NotificationThread):
