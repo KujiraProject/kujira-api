@@ -3,15 +3,14 @@ python:
   - "2.7"
 
 before_install:
-  - sudo apt-get install -y python-eventlet
   - pip install -r requirements.txt
-  - pip install pytest pytest-cov pylint
+  - pip install pytest pytest-cov
   - pip install coveralls
 
-# command to install dependencies
-script:
-  - pylint kujira/
-  - py.test tests/
+script: |
+  pylint . &&
+  py.test tests/
+
 after_success:
     - coveralls
 
