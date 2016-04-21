@@ -4,11 +4,11 @@ python:
 
 before_install:
   - pip install -r requirements.txt
-  - pip install pytest pytest-cov
+  - pip install pytest pytest-cov pylint
   - pip install coveralls
 
 script: |
-  pylint . &&
+  pylint . \r &&
   py.test tests/
 
 after_success:
