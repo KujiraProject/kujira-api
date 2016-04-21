@@ -3,6 +3,7 @@ python:
   - "2.7"
 
 before_install:
+  - apt-get install -y python-eventlet
   - pip install -r requirements.txt
   - pip install pytest pytest-cov pylint
   - pip install coveralls
