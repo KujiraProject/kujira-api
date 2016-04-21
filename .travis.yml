@@ -10,7 +10,7 @@ before_install:
 # command to install dependencies
 script:
   - pylint kujira/
-  - py.test kujira/
+  - py.test tests/
 after_success:
     - coveralls
 
