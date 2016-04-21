@@ -3,8 +3,9 @@ python:
   - "2.7"
 
 before_install:
-    - pip install pytest pytest-cov pylint
-    - pip install coveralls
+  - pip install -r requirements.txt
+  - pip install pytest pytest-cov pylint
+  - pip install coveralls
 
 # command to install dependencies
 script:
