@@ -8,7 +8,7 @@ before_install:
   - pip install coveralls
 
 script: |
-  pylint . &&
+  pylint kujira/ &&
   py.test tests/
 
 after_success:
