@@ -10,16 +10,23 @@ def server():
     response = authenticate(args.user, args.password).request('GET', args.url).json()
     return print_and_return(json.dumps(response, indent=2))
 
+
 @server_bp.route("/<fsid>")
 def server_fsid(fsid):
-    args, remainder = arg_parser_init('cluster/'+fsid).parse_known_args()
+    args, remainder = arg_parser_init('cluster/' + fsid).parse_known_args()
     response = authenticate(args.user, args.password).request('GET', args.url).json()
     return print_and_return(json.dumps(response, indent=2))
+
 
 @server_bp.route("/<fsid>/<fqdn>")
 def server_fsid_fqdn(fsid, fqdn):
-    args, remainder = arg_parser_init('cluster/'+fsid+'/server/'+fqdn).parse_known_args()
+    args, remainder = arg_parser_init('cluster/' + fsid + '/server/' + fqdn).parse_known_args()
     response = authenticate(args.user, args.password).request('GET', args.url).json()
     return print_and_return(json.dumps(response, indent=2))
 
 
+@server_bp.route("/<fqdn>/grains")
+def server_fqdn_grains(fqdn):
+    args, remainder = arg_parser_init('server/' + fqdn + '/grains').parse_known_args()
+    response = authenticate(args.user, args.password).request('GET', args.url).json()
+    return print_and_return(json.dumps(response, indent=2))

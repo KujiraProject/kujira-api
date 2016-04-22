@@ -1,7 +1,7 @@
 import json
 
 from kujira.blueprints import osd_bp
-from kujira.rest.lib.helper_methods import arg_parser_init, authenticate, print_and_return
+from kujira.rest.lib.helper_methods import arg_parser_init, authenticate, print_and_return, json_api_parser
 
 
 @osd_bp.route("/<fsid>")
