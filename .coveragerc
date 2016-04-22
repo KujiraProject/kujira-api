@@ -1,0 +1,11 @@
+[run]
+omit = tests/*
+concurrency = eventlet
+source=kujira/*
+
+[paths]
+source=kujira
+
+[report]
+omit = tests/*
+show_missing = True

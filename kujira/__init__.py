@@ -1,3 +1,5 @@
+""" Kujira API is flask/websocket app for serving Ceph cluster data """
+
 from flask import Flask
 from flask_socketio import SocketIO
 
