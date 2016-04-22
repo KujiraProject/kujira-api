@@ -8,7 +8,7 @@ before_install:
   - pip install coveralls
 
 script: |
-  pylint kujira/ && py.test tests/
+  pylint kujira/ && py.test  --doctest-modules --cov  tests/
 
 after_success:
     - coveralls
