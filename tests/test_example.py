@@ -1,5 +1,6 @@
 """ Example docstring """
 
+
 def square(arg):
     """
     Example function
