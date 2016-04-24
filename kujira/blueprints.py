@@ -1,7 +1,7 @@
 from flask import Blueprint
 
-osd_bp = Blueprint('osd', __name__, url_prefix="/osd")
-server_bp = Blueprint('server', __name__, url_prefix="/server")
-pool_bp = Blueprint('pool', __name__, url_prefix="/pool")
-crush_bp = Blueprint('crush', __name__, url_prefix="/crush")
-mon_bp = Blueprint('mon', __name__, url_prefix="/mon")
+cluster_bp = Blueprint('clusters', __name__, url_prefix="/clusters")
+osd_bp = Blueprint('osds', __name__, url_prefix="/osds")
+server_bp = Blueprint('servers', __name__, url_prefix="/servers")
+pool_bp = Blueprint('pools', __name__, url_prefix="/pools")
+mon_bp = Blueprint('mons', __name__, url_prefix="/mons")
