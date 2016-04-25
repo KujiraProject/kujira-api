@@ -1,6 +1,7 @@
 # Helpers
 import argparse
 import json
+
 from flask import Response
 
 from kujira.rest.lib.authenticated_http_client import AuthenticatedHttpClient
@@ -13,29 +14,42 @@ def generate_response(args):
         response = authenticate(args.user, args.password).request('GET', args.url).json()
         output = json_api_parser(response)
         response = Response(json.dumps(output, indent=2), content_type='application/json')
-        return response
     except Exception as e:
         response = create_error_422(args.url, e.message)
-        return response
+    return response
 
 
 def json_api_parser(response):
     json_response = json.dumps(response)
     json_dict = json.loads(json_response)
+    data = dict_iterate(json_dict)
+    return data
+
+
+def dict_iterate(json_dict):
     try:
-        dict = json_dict[0]
+        new_dict = json_dict[0]
     except Exception as e:
-        dict = json_dict
+        new_dict = json_dict
     data = {'data': {}}
     attributes = {}
-    for key, value in dict.iteritems():
-        if str(key) == 'type':
-            data['data']['type'] = str(value)
-        elif str(key) == 'id':
-            data['data']['id'] = str(value)
-        else:
-            attributes[key] = value
-    data['data']['attributes'] = attributes
+    if new_dict != []:
+        for key, value in new_dict.iteritems():
+            if str(key) == 'type':
+                data['data']['type'] = str(value)
+            elif str(key) == 'id':
+                data['data']['id'] = str(value)
+            elif isinstance(value, list):
+                lst = []
+                for index in range(len(value)):
+                    if isinstance(value[index], dict):
+                        lst.append(dict_iterate(value[index]))
+                    else:
+                        lst.append(value[index])
+                attributes[key] = lst
+            else:
+                attributes[key] = value
+        data['data']['attributes'] = attributes
     return data
 
 
