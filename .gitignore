@@ -63,3 +63,6 @@ target/
 
 # PyCharm project settings
 .idea
+
+# Exclude rest libraries directory
+!kujira/rest/lib/
