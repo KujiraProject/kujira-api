@@ -1,0 +1,15 @@
+language: python
+python:
+  - "2.7"
+
+before_install:
+  - pip install -r requirements.txt
+  - pip install -r requirements_tests.txt
+  - pip install pytest pytest-cov pylint
+  - pip install coveralls
+
+script: |
+  pylint kujira/ && py.test  --cov-config .coveragerc --cov=kujira --doctest-modules  tests/
+
+after_success:
+    - coveralls
