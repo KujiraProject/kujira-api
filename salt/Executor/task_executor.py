@@ -1,16 +1,12 @@
 # -*- coding: utf-8 -*-
 # Import python libs
 from __future__ import absolute_import
-import json
 import time
 import logging
-import json
-import Queue
 
 # Import salt libs
 import salt.utils.event
 import salt.client
-import salt.config
 
 logger = logging.getLogger('task_execute')
 handler = logging.FileHandler('/var/tmp/task_execute.log')
@@ -24,8 +20,9 @@ except ImportError:
 	logger.error('No connection with mongoDB')
 	class TaskStorage(object):
 		def __init__(self):
-			self.listTask=[{"host":"mng","module":'cmd.run', "arg":"date","jid" : "", "status":""},{"host":"node1","module":'test.sleep', "arg":"1","jid" : "", "status":""},{"host":"mng","module":'cmd.run', "arg":"ls","jid" : "", "status":""}]
-		def get_task(self, a):
+			self.listTask=[{"host":"mng","module":'cmd.run', "arg":"date","jid" : "", "status":""},{"host":"node1","module":'test.sleep', 
+			"arg":"1","jid" : "", "status":""},{"host":"mng","module":'cmd.run', "arg":"ls","jid" : "", "status":""}]
+		def get_task(self):
 			return self.listTask[0]
 		def update(self, task):
 			self.listTask[0] = task
@@ -39,22 +36,22 @@ def execute(task):
 	return job_id
 	
 def check(task):
+	"""Function which check task status"""
 	client_salt = salt.client.LocalClient()
 	while True:	
 		try:
 			ret_temp = client_salt.get_cli_returns(task['jid'], task['host'])
 			ret=[x for x in ret_temp]
 			if ret:
-				logger.info('Task is finished jid: %s' % task['jid'])
+				logger.info('Task is finished jid: %s', task['jid'])
 				if(ret[0]['mng']['ret'] == True):
 					return True
 				else:
 					return False
 			else:
-				logger.info('Task still running jid: %s' % task['jid'])
-			time.sleep(2)
+				logger.info('Task still running jid: %s', task['jid'])
 		except KeyError as ex:
-			logger.error('Catch exception KeyError %s' % ex)
+			logger.error('Catch exception KeyError %s', ex)
 			continue
 		except:
 			logger.error('Catch unexcepted error')
@@ -62,9 +59,10 @@ def check(task):
 	
 	
 def start():
+	"""Main function where take and execute tasks """
 	connection=TaskStorage()
 	while True:
-		task=connection.get_task(1)
+		task=connection.get_task()
 		if task:
 			jid=execute(task)
 			task['jid']= jid
