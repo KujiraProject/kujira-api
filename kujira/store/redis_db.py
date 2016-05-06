@@ -7,6 +7,7 @@ class RedisConnection:
     def __init__(self):
         self.connection_adress = None
         self.redis_connection = None
+        self.connection_port = None
 
     __metaclass__ = ABCMeta
 
@@ -18,4 +19,7 @@ class RedisConnection:
     @abstractmethod
     def is_connected(self):
         '''checks connections'''
-        return bool(self.redis_connection.ping())
+        try:
+            return bool(self.redis_connection.ping())
+        except redis.ConnectionError:
+            raise Exception('Cannot connect to database!')
