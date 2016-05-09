@@ -1,15 +1,15 @@
-from kujira.blueprints import osd_bp
-from kujira.rest.lib.request_methods import send_get, send_get_alt
+from kujira.blueprints import OSD_BP
 from kujira.rest.lib.parsing_methods import parse_and_return
+from kujira.rest.lib.request_methods import send_get_alt
 
 
-@osd_bp.route("/<fsid>")
+@OSD_BP.route("/<fsid>")
 def all_osds(fsid):
     response = send_get_alt('cluster/' + fsid + '/osd')
     return parse_and_return(osds_parse, response)
 
 
-@osd_bp.route("/<fsid>/<osd_id>")
+@OSD_BP.route("/<fsid>/<osd_id>")
 def osd(fsid, osd_id):
     response = send_get_alt('cluster/' + fsid + '/osd/' + osd_id)
     return parse_and_return(osds_parse, response)

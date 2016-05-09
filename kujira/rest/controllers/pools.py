@@ -1,15 +1,15 @@
-from kujira.blueprints import pool_bp
+from kujira.blueprints import POOL_BP
 from kujira.rest.lib.request_methods import send_get_alt
 from kujira.rest.lib.parsing_methods import parse_and_return
 
 
-@pool_bp.route("/<fsid>")
+@POOL_BP.route("/<fsid>")
 def all_pools(fsid):
     response = send_get_alt('cluster/' + fsid + '/pool')
     return parse_and_return(pools_parse, response)
 
 
-@pool_bp.route("/<fsid>/<int:pool_id>")
+@POOL_BP.route("/<fsid>/<int:pool_id>")
 def pool(fsid, pool_id):
     response = send_get_alt('cluster/' + fsid + '/pool/' + str(pool_id))
     return parse_and_return(pools_parse, response)

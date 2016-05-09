@@ -1,20 +1,18 @@
-from kujira.blueprints import server_bp
+from kujira.blueprints import SERVER_BP
 from kujira.rest.lib.request_methods import send_get_alt
-from kujira.rest.lib.parsing_methods import parse_and_return
 
 
-
-@server_bp.route("/<fsid>")
+@SERVER_BP.route("/<fsid>")
 def all_servers(fsid):
     return send_get_alt('cluster/' + fsid + '/server')
 
 
-@server_bp.route("/<fsid>/<fqdn>")
+@SERVER_BP.route("/<fsid>/<fqdn>")
 def server(fsid, fqdn):
     return send_get_alt('cluster/' + fsid + '/server/' + fqdn)
 
 
-@server_bp.route("/<fqdn>")
+@SERVER_BP.route("/<fqdn>")
 def server_fqdn(fqdn):
     return send_get_alt('server/' + fqdn)
 

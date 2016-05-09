@@ -1,9 +1,9 @@
-from kujira.blueprints import cluster_bp
+from kujira.blueprints import CLUSTER_BP
 from kujira.rest.lib.request_methods import send_get_alt
 from kujira.rest.lib.parsing_methods import parse_and_return
 
 
-@cluster_bp.route("")
+@CLUSTER_BP.route("")
 def cluster():
     response = send_get_alt('cluster')
     return parse_and_return(clusters_parse, response)
