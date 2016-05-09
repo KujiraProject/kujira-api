@@ -53,9 +53,6 @@ def check(task):
 		except KeyError as ex:
 			logger.error('Catch exception KeyError %s', ex)
 			continue
-		except:
-			logger.error('Catch unexcepted error')
-			continue
 	
 	
 def start():
