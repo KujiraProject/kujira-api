@@ -1,3 +1,5 @@
+import logging
+
 from kujira.blueprints import OSD_BP
 from kujira.rest.lib.parsing_methods import parse_and_return
 from kujira.rest.lib.request_methods import send_get
@@ -27,6 +29,7 @@ def osds_parse(json_dict):
         new_dict = json_dict[0]
     except Exception as e:
         new_dict = json_dict
+        logging.warning(e.message)
     data = {'data': {'type' : 'osd'}}
     attributes = {}
     if new_dict:
