@@ -1,21 +1,21 @@
-from kujira.blueprints import mon_bp
+from kujira.blueprints import MON_BP
 from kujira.rest.lib.request_methods import send_get_alt
 from kujira.rest.lib.parsing_methods import parse_and_return
 
 
-@mon_bp.route("/<fsid>")
+@MON_BP.route("/<fsid>")
 def all_monitors(fsid):
     response = send_get_alt('cluster/' + fsid + '/mon')
     return parse_and_return(mons_parse, response)
 
 
-@mon_bp.route("/<fsid>/<name>")
+@MON_BP.route("/<fsid>/<name>")
 def monitor(fsid, name):
     response = send_get_alt('cluster/' + fsid + '/mon/' + name)
     return parse_and_return(mons_parse, response)
 
 
-@mon_bp.route("/<fsid>/<name>/status")
+@MON_BP.route("/<fsid>/<name>/status")
 def monitor_status(fsid, name):
     response = send_get_alt('cluster/' + fsid + '/mon/' + name + 'status')
     return parse_and_return(mons_parse, response)
