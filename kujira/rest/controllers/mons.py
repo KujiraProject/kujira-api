@@ -9,8 +9,7 @@ from kujira.rest.lib.parsing_methods import parse_and_return
 Methods mapped:
 - api/v2/clusters/fsid/mon
 - api/v2/clusters/fsid/mon/name
-- api/v2/clusters/fsid/mon/name/status
-"""
+- api/v2/clusters/fsid/mon/name/status"""
 
 
 @MON_BP.route("/<fsid>")
@@ -22,12 +21,6 @@ def all_monitors(fsid):
 @MON_BP.route("/<fsid>/<name>")
 def monitor(fsid, name):
     response = send_get('cluster/' + fsid + '/mon/' + name)
-    return parse_and_return(mons_parse, response)
-
-
-@MON_BP.route("/<fsid>/<name>/status")
-def monitor_status(fsid, name):
-    response = send_get('cluster/' + fsid + '/mon/' + name + 'status')
     return parse_and_return(mons_parse, response)
 
 

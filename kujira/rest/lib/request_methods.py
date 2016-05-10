@@ -5,8 +5,7 @@ from kujira.rest.lib.calamari_client import CalamariClient
 from kujira.rest.lib.parsing_methods import create_error_422
 
 
-"""Library which contains methods representing HTTP Requests via CalamariClient
-"""
+"""Library which contains methods representing HTTP Requests via CalamariClient"""
 
 
 def send_get(url):

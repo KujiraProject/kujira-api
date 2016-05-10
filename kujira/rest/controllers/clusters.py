@@ -7,8 +7,7 @@ from kujira.rest.lib.parsing_methods import parse_and_return
 
 """API Controller for cluster objects.
 Methods mapped:
-- api/v2/clusters
-"""
+- api/v2/clusters"""
 
 
 @CLUSTER_BP.route("")

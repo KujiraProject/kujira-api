@@ -8,8 +8,7 @@ from kujira.rest.lib.request_methods import send_get
 """API Controller for osd objects.
 Methods mapped:
 - api/v2/clusters/fsid/osd
-- api/v2/clusters/fsid/osd/osd_id
-"""
+- api/v2/clusters/fsid/osd/osd_id"""
 
 
 @OSD_BP.route("/<fsid>")

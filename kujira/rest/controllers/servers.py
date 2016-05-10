@@ -9,8 +9,7 @@ from kujira.rest.lib.parsing_methods import parse_and_return
 Methods mapped:
 - api/v2/clusters/fsid/server
 - api/v2/clusters/fsid/server/fqdn
-- api/v2/server/fqdn
-"""
+- api/v2/server/fqdn"""
 
 
 @SERVER_BP.route("/<fsid>")
@@ -32,6 +31,7 @@ def server_fqdn(fqdn):
 
 
 def servers_parse_alt(json_dict):
+    print json_dict
     try:
         new_dict = json_dict[0]
     except Exception as e:

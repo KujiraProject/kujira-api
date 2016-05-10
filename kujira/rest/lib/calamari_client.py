@@ -3,8 +3,7 @@ import requests
 
 """Calamari Authentication Client, which contains methods for;
 - authenticating user (basing on credentials stored in config.py)
-- basic GET and POST requests
-"""
+- basic GET and POST requests"""
 
 
 class CalamariClient(object):
