@@ -8,8 +8,7 @@ from kujira.rest.lib.parsing_methods import parse_and_return
 """API Controller for pool objects.
 Methods mapped:
 - api/v2/clusters/fsid/pool
-- api/v2/clusters/fsid/pool/pool_id
-"""
+- api/v2/clusters/fsid/pool/pool_id"""
 
 
 @POOL_BP.route("/<fsid>")
