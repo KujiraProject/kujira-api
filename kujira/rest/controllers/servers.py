@@ -11,13 +11,6 @@ from kujira.rest.lib.request_methods import send_get
 from kujira.rest.lib.parsing_methods import parse_and_return
 
 
-"""API Controller for server objects.
-Methods mapped:
-- api/v2/clusters/fsid/server
-- api/v2/clusters/fsid/server/fqdn
-- api/v2/server/fqdn"""
-
-
 @SERVER_BP.route("/<fsid>")
 def all_servers(fsid):
     response = send_get('cluster/' + fsid + '/server')
