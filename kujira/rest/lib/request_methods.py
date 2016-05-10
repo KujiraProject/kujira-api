@@ -1,11 +1,10 @@
 """Library which contains methods representing HTTP Requests via CalamariClient"""
+
 import logging
 
 from config import CALAMARI_API_URL, CALAMARI_API_PWD, CALAMARI_API_USER
 from kujira.rest.lib.calamari_client import CalamariClient
 from kujira.rest.lib.parsing_methods import create_error_422
-
-
 
 
 def send_get(url):
