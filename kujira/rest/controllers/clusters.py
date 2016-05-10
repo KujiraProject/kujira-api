@@ -1,13 +1,12 @@
+"""API Controller for cluster objects.
+Methods mapped:
+- api/v2/clusters"""
+
 import logging
 
 from kujira.blueprints import CLUSTER_BP
 from kujira.rest.lib.request_methods import send_get
 from kujira.rest.lib.parsing_methods import parse_and_return
-
-
-"""API Controller for cluster objects.
-Methods mapped:
-- api/v2/clusters"""
 
 
 @CLUSTER_BP.route("")

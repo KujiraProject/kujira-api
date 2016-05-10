@@ -1,15 +1,14 @@
-import logging
-
-from kujira.blueprints import MON_BP
-from kujira.rest.lib.request_methods import send_get
-from kujira.rest.lib.parsing_methods import parse_and_return
-
-
 """API Controller for monitor objects.
 Methods mapped:
 - api/v2/clusters/fsid/mon
 - api/v2/clusters/fsid/mon/name
 - api/v2/clusters/fsid/mon/name/status"""
+
+import logging
+
+from kujira.blueprints import MON_BP
+from kujira.rest.lib.request_methods import send_get
+from kujira.rest.lib.parsing_methods import parse_and_return
 
 
 @MON_BP.route("/<fsid>")
