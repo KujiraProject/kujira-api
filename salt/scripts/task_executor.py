@@ -24,10 +24,11 @@ except ImportError:
 			"arg":"1","jid" : "", "status":""},{"host":"mng","module":'cmd.run', "arg":"ls","jid" : "", "status":""}]
 		def get_task(self):
 			return self.listTask[0]
-		def update(self, task):
+		def update_task(self, task):
 			self.listTask[0] = task
 			if(self.listTask[0]['status'] != ''):
 				del self.listTask[0]		
+	
 	
 def execute(task):
 	"""Function which execute tasks"""
@@ -35,23 +36,25 @@ def execute(task):
 	job_id = client_salt.cmd_async(task["host"], task["module"], [task["arg"]])
 	return job_id
 	
-def check(task):
-	"""Function which check task status"""
+	
+def wait_for_finish(task):
+	"""Function which wait for task status"""
 	client_salt = salt.client.LocalClient()
 	while True:	
 		try:
 			ret_temp = client_salt.get_cli_returns(task['jid'], task['host'])
 			ret=[x for x in ret_temp]
-			if ret:
-				logger.info('Task is finished jid: %s', task['jid'])
-				if(ret[0]['mng']['ret'] == True):
-					return True
-				else:
-					return False
+			if not ret:
+				logger.info('Task still running jid: {}'.format(task['jid']))
+				time.sleep(1)
+				continue
+			logger.info('Task is finished jid: {}'.format(task['jid']))
+			if(ret[0]['mng']['ret'] == True):
+				return True
 			else:
-				logger.info('Task still running jid: %s', task['jid'])
+				return False
 		except KeyError as ex:
-			logger.error('Catch exception KeyError %s', ex)
+			logger.error('Catch exception KeyError {}'.format(ex))
 			continue
 	
 	
@@ -60,20 +63,22 @@ def start():
 	connection=TaskStorage()
 	while True:
 		task=connection.get_task()
-		if task:
-			jid=execute(task)
-			task['jid']= jid
-			connection.update(task)
-			if jid==0:
-				task['status'] = 'failure'
-				connection.update(task)
-				break;
-			if(check(task)):
-				task['status'] = 'finished'
-			else:
-				task['status'] = 'failure'	
-			connection.update(task)
-		else:
+		
+		if not task:
 			time.sleep(60) # sleep asking for next task
+			continue
+			
+		jid=execute(task)
+		task['jid']= jid
+		connection.update_task(task)
+		if jid==0:
+			task['status'] = 'failure'
+			connection.update_task(task)
+			break;
+		if(wait_for_finish(task)):
+			task['status'] = 'finished'
+		else:
+			task['status'] = 'failure'	
+		connection.update_task(task)
 
 start()
