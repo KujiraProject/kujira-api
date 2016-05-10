@@ -45,9 +45,9 @@ def put_event_data_in_redis_queue(event_data, redis_handler):
     :param event_data: event data to push
     :param redis_handler: Redis object
     """
-    redis_handler.push_event_to_queue(event_data)
     logger.debug('Pushed event to event_queue. Event: ' + event_data)
-
+    redis_handler.push_event_to_queue(event_data)
+    
 
 def calamari_event_handler(event, redis_handler):
     """Handle salt event from calamari
