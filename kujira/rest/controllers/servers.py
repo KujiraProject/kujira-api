@@ -36,17 +36,19 @@ def servers_parse_alt(json_dict):
     except Exception as e:
         new_dict = json_dict
         logging.warning(e.message)
-    data = {'data': {'type' : 'server'}}
+    root = {'data': []}
     attributes = {}
     if new_dict:
+        data = {'type': 'servers'}
         for key, value in new_dict.iteritems():
+            key = key.replace('_', '-')
             if str(key) == 'fqdn':
-                data['data']['id'] = str(value)
+                data['id'] = str(value)
                 attributes[key] = value
             elif str(key) == 'type':
-                data['data']['type'] = str(value)
+                data['type'] = str(value) + 's'
             elif str(key) == 'id':
-                data['data']['id'] = str(value)
+                data['id'] = str(value)
             elif str(key) == 'services':
                 relationships = []
                 for index in range(len(value)):
@@ -54,8 +56,9 @@ def servers_parse_alt(json_dict):
                         relationships.append(servers_parse_alt(value[index]))
                     else:
                         relationships.append(value[index])
-                data['data']['relationships'] = relationships
+                data['relationships'] = relationships
             else:
                 attributes[key] = value
-        data['data']['attributes'] = attributes
-    return data
+        data['attributes'] = attributes
+    root['data'].append(data)
+    return root
