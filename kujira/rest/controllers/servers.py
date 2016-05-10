@@ -1,3 +1,9 @@
+"""API Controller for server objects.
+Methods mapped:
+- api/v2/clusters/fsid/server
+- api/v2/clusters/fsid/server/fqdn
+- api/v2/server/fqdn"""
+
 import logging
 
 from kujira.blueprints import SERVER_BP

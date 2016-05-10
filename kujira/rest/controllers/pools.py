@@ -1,14 +1,13 @@
+"""API Controller for pool objects.
+Methods mapped:
+- api/v2/clusters/fsid/pool
+- api/v2/clusters/fsid/pool/pool_id"""
+
 import logging
 
 from kujira.blueprints import POOL_BP
 from kujira.rest.lib.request_methods import send_get
 from kujira.rest.lib.parsing_methods import parse_and_return
-
-
-"""API Controller for pool objects.
-Methods mapped:
-- api/v2/clusters/fsid/pool
-- api/v2/clusters/fsid/pool/pool_id"""
 
 
 @POOL_BP.route("/<fsid>")

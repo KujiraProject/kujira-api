@@ -1,14 +1,13 @@
+"""API Controller for osd objects.
+Methods mapped:
+- api/v2/clusters/fsid/osd
+- api/v2/clusters/fsid/osd/osd_id"""
+
 import logging
 
 from kujira.blueprints import OSD_BP
 from kujira.rest.lib.parsing_methods import parse_and_return
 from kujira.rest.lib.request_methods import send_get
-
-
-"""API Controller for osd objects.
-Methods mapped:
-- api/v2/clusters/fsid/osd
-- api/v2/clusters/fsid/osd/osd_id"""
 
 
 @OSD_BP.route("/<fsid>")
