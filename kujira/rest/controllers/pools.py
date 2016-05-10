@@ -28,15 +28,18 @@ def pools_parse(json_dict):
     except Exception as e:
         new_dict = json_dict
         logging.warning(e.message)
-    data = {'data': {'type' : 'pool'}}
+    root = {'data': []}
     attributes = {}
     if new_dict:
+        data = {'type': 'pools'}
         for key, value in new_dict.iteritems():
+            key = key.replace('_', '-')
             if str(key) == 'id':
-                data['data']['id'] = str(value)
+                data['id'] = str(value)
                 attributes[key] = value
             else:
                 attributes[key] = value
-        data['data']['attributes'] = attributes
-    return data
+        data['attributes'] = attributes
+    root['data'].append(data)
+    return root
 
