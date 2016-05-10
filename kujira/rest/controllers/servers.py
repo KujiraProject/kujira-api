@@ -30,7 +30,6 @@ def server_fqdn(fqdn):
 
 
 def servers_parse_alt(json_dict):
-    print json_dict
     try:
         new_dict = json_dict[0]
     except Exception as e:
