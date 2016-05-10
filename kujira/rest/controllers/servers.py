@@ -1,3 +1,5 @@
+import logging
+
 from kujira.blueprints import SERVER_BP
 from kujira.rest.lib.request_methods import send_get
 from kujira.rest.lib.parsing_methods import parse_and_return
@@ -34,6 +36,7 @@ def servers_parse_alt(json_dict):
         new_dict = json_dict[0]
     except Exception as e:
         new_dict = json_dict
+        logging.warning(e.message)
     data = {'data': {'type' : 'server'}}
     attributes = {}
     if new_dict:

@@ -1,3 +1,5 @@
+import logging
+
 from config import CALAMARI_API_URL, CALAMARI_API_PWD, CALAMARI_API_USER
 from kujira.rest.lib.calamari_client import CalamariClient
 from kujira.rest.lib.parsing_methods import create_error_422, parse_and_return
@@ -13,4 +15,5 @@ def send_get(url):
         response = client.get(url)
     except Exception as e:
         response = create_error_422(url, e.message)
+        logging.warning(e.message)
     return response
