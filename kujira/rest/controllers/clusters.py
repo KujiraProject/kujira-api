@@ -12,7 +12,9 @@ from kujira.rest.lib.parsing_methods import parse_and_return
 @CLUSTER_BP.route("")
 def cluster():
     response = send_get('cluster')
-    return parse_and_return(clusters_parse, response)
+    if response.status_code != 422:
+        response = parse_and_return(clusters_parse, response)
+    return response
 
 
 def clusters_parse(json_dict):

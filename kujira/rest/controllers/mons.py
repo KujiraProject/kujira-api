@@ -14,13 +14,17 @@ from kujira.rest.lib.parsing_methods import parse_and_return
 @MON_BP.route("/<fsid>")
 def all_monitors(fsid):
     response = send_get('cluster/' + fsid + '/mon')
-    return parse_and_return(mons_parse, response)
+    if response.status_code != 422:
+        response = parse_and_return(mons_parse, response)
+    return response
 
 
 @MON_BP.route("/<fsid>/<name>")
 def monitor(fsid, name):
     response = send_get('cluster/' + fsid + '/mon/' + name)
-    return parse_and_return(mons_parse, response)
+    if response.status_code != 422:
+        response = parse_and_return(mons_parse, response)
+    return response
 
 
 def mons_parse(json_dict):

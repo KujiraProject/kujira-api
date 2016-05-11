@@ -13,13 +13,17 @@ from kujira.rest.lib.parsing_methods import parse_and_return
 @POOL_BP.route("/<fsid>")
 def all_pools(fsid):
     response = send_get('cluster/' + fsid + '/pool')
-    return parse_and_return(pools_parse, response)
+    if response.status_code != 422:
+        response = parse_and_return(pools_parse, response)
+    return response
 
 
 @POOL_BP.route("/<fsid>/<int:pool_id>")
 def pool(fsid, pool_id):
     response = send_get('cluster/' + fsid + '/pool/' + str(pool_id))
-    return parse_and_return(pools_parse, response)
+    if response.status_code != 422:
+        response = parse_and_return(pools_parse, response)
+    return response
 
 
 def pools_parse(json_dict):

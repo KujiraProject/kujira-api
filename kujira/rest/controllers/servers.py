@@ -14,22 +14,28 @@ from kujira.rest.lib.parsing_methods import parse_and_return
 @SERVER_BP.route("/<fsid>")
 def all_servers(fsid):
     response = send_get('cluster/' + fsid + '/server')
-    return parse_and_return(servers_parse_alt, response)
+    if response.status_code != 422:
+        response = parse_and_return(servers_parse, response)
+    return response
 
 
 @SERVER_BP.route("/<fsid>/<fqdn>")
 def server(fsid, fqdn):
     response = send_get('cluster/' + fsid + '/server/' + fqdn)
-    return parse_and_return(servers_parse_alt, response)
+    if response.status_code != 422:
+        response = parse_and_return(servers_parse, response)
+    return response
 
 
 @SERVER_BP.route("/<fqdn>")
 def server_fqdn(fqdn):
     response = send_get('/server/' + fqdn)
-    return parse_and_return(servers_parse_alt, response)
+    if response.status_code != 422:
+        response = parse_and_return(servers_parse, response)
+    return response
 
 
-def servers_parse_alt(json_dict):
+def servers_parse(json_dict):
     print json_dict
     try:
         new_dict = json_dict[0]
@@ -53,7 +59,7 @@ def servers_parse_alt(json_dict):
                 relationships = []
                 for index in range(len(value)):
                     if isinstance(value[index], dict):
-                        relationships.append(servers_parse_alt(value[index]))
+                        relationships.append(servers_parse(value[index]))
                     else:
                         relationships.append(value[index])
                 data['relationships'] = relationships

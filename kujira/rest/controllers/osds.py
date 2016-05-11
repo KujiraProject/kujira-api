@@ -13,13 +13,17 @@ from kujira.rest.lib.request_methods import send_get
 @OSD_BP.route("/<fsid>")
 def all_osds(fsid):
     response = send_get('cluster/' + fsid + '/osd')
-    return parse_and_return(osds_parse, response)
+    if response.status_code != 422:
+        response = parse_and_return(osds_parse, response)
+    return response
 
 
 @OSD_BP.route("/<fsid>/<osd_id>")
 def osd(fsid, osd_id):
     response = send_get('cluster/' + fsid + '/osd/' + osd_id)
-    return parse_and_return(osds_parse, response)
+    if response.status_code != 422:
+        response = parse_and_return(osds_parse, response)
+    return response
 
 
 def osds_parse(json_dict):

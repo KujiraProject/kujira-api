@@ -1,3 +1,4 @@
+requests
 Flask==0.10.1
 Flask-SocketIO==2.2
 eventlet==0.18.4
