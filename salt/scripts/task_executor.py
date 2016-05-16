@@ -45,16 +45,16 @@ def wait_for_finish(task):
 			ret_temp = client_salt.get_cli_returns(task['jid'], task['host'])
 			ret=[x for x in ret_temp]
 			if not ret:
-				logger.info('Task still running jid: {}'.format(task['jid']))
+				logger.info('Task still running jid: %s' task['jid'])
 				time.sleep(1)
 				continue
-			logger.info('Task is finished jid: {}'.format(task['jid']))
+			logger.info('Task is finished jid: %s' task['jid'])
 			if(ret[0]['mng']['ret'] == True):
 				return True
 			else:
 				return False
 		except KeyError as ex:
-			logger.error('Catch exception KeyError {}'.format(ex))
+			logger.error('Catch exception KeyError %s', ex)
 			continue
 	
 	
