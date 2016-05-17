@@ -64,15 +64,15 @@ def wait_for_finish(task):
             if ret:
                 LOG.debug(ret)
                 if ret[0][task['host']]['ret'] == True:
-                    LOG.info('Task finished. JID: %s' % task['jid'])
+                    LOG.info('Task finished. JID: %s', task['jid'])
                     return True
                 else:
-                    LOG.info('Task failed. JID: %s' % task['jid'])
+                    LOG.info('Task failed. JID: %s', task['jid'])
                     return False
             else:
-                LOG.info('Task still running. JID: %s' % task['jid'])
+                LOG.info('Task still running. JID: %s', task['jid'])
             time.sleep(CHECK_TIME)
-        except KeyError as ex:
+        except KeyError:
             continue # Check it
 
 def start():
