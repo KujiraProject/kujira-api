@@ -12,22 +12,29 @@ from kujira.rest.lib.request_methods import send_get
 
 @OSD_BP.route("/<fsid>")
 def all_osds(fsid):
+    """Request for getting all osds"""
     response = send_get('cluster/' + fsid + '/osd')
-    return parse_and_return(osds_parse, response)
+    if response.status_code != 422:
+        response = parse_and_return(osds_parse, response)
+    return response
 
 
 @OSD_BP.route("/<fsid>/<osd_id>")
 def osd(fsid, osd_id):
+    """Request for getting monitor of particular id"""
     response = send_get('cluster/' + fsid + '/osd/' + osd_id)
-    return parse_and_return(osds_parse, response)
+    if response.status_code != 422:
+        response = parse_and_return(osds_parse, response)
+    return response
 
 
 def osds_parse(json_dict):
+    """Osds parser to JSON API format"""
     try:
         new_dict = json_dict[0]
-    except Exception as e:
+    except KeyError as err:
         new_dict = json_dict
-        logging.warning(e.message)
+        logging.warning(str(err))
     root = {'data': []}
     attributes = {}
     if new_dict:
@@ -39,7 +46,7 @@ def osds_parse(json_dict):
                 attributes[key] = value
             elif isinstance(value, list):
                 lst = []
-                for index in range(len(value)):
+                for index in enumerate(value):
                     if isinstance(value[index], dict):
                         lst.append(osds_parse(value[index]))
                     else:

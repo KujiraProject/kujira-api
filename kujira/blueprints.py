@@ -1,3 +1,5 @@
+"""File with Blueprints registration"""
+
 from flask import Blueprint
 
 OSD_BP = Blueprint('osd', __name__, url_prefix="/osds")

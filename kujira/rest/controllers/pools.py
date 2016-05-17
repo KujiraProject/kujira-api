@@ -12,22 +12,29 @@ from kujira.rest.lib.parsing_methods import parse_and_return
 
 @POOL_BP.route("/<fsid>")
 def all_pools(fsid):
+    """Request for getting all pools"""
     response = send_get('cluster/' + fsid + '/pool')
-    return parse_and_return(pools_parse, response)
+    if response.status_code != 422:
+        response = parse_and_return(pools_parse, response)
+    return response
 
 
 @POOL_BP.route("/<fsid>/<int:pool_id>")
 def pool(fsid, pool_id):
+    """Request for pools monitor of particular id"""
     response = send_get('cluster/' + fsid + '/pool/' + str(pool_id))
-    return parse_and_return(pools_parse, response)
+    if response.status_code != 422:
+        response = parse_and_return(pools_parse, response)
+    return response
 
 
 def pools_parse(json_dict):
+    """Pools parser to JSON API format"""
     try:
         new_dict = json_dict[0]
-    except Exception as e:
+    except KeyError as err:
         new_dict = json_dict
-        logging.warning(e.message)
+        logging.warning(str(err))
     root = {'data': []}
     attributes = {}
     if new_dict:

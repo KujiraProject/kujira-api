@@ -13,28 +13,38 @@ from kujira.rest.lib.parsing_methods import parse_and_return
 
 @SERVER_BP.route("/<fsid>")
 def all_servers(fsid):
+    """Request for getting all servers"""
     response = send_get('cluster/' + fsid + '/server')
-    return parse_and_return(servers_parse_alt, response)
+    if response.status_code != 422:
+        response = parse_and_return(servers_parse, response)
+    return response
 
 
 @SERVER_BP.route("/<fsid>/<fqdn>")
 def server(fsid, fqdn):
+    """Request for getting server of particular fqdn and fsid"""
     response = send_get('cluster/' + fsid + '/server/' + fqdn)
-    return parse_and_return(servers_parse_alt, response)
+    if response.status_code != 422:
+        response = parse_and_return(servers_parse, response)
+    return response
 
 
 @SERVER_BP.route("/<fqdn>")
 def server_fqdn(fqdn):
+    """Request for getting server of particular fqdn"""
     response = send_get('/server/' + fqdn)
-    return parse_and_return(servers_parse_alt, response)
+    if response.status_code != 422:
+        response = parse_and_return(servers_parse, response)
+    return response
 
 
-def servers_parse_alt(json_dict):
+def servers_parse(json_dict):
+    """Servers parser to JSON API format"""
     try:
         new_dict = json_dict[0]
-    except Exception as e:
+    except KeyError as err:
         new_dict = json_dict
-        logging.warning(e.message)
+        logging.warning(str(err))
     root = {'data': []}
     attributes = {}
     if new_dict:
@@ -50,9 +60,9 @@ def servers_parse_alt(json_dict):
                 data['id'] = str(value)
             elif str(key) == 'services':
                 relationships = []
-                for index in range(len(value)):
+                for index in enumerate(value):
                     if isinstance(value[index], dict):
-                        relationships.append(servers_parse_alt(value[index]))
+                        relationships.append(servers_parse(value[index]))
                     else:
                         relationships.append(value[index])
                 data['relationships'] = relationships
