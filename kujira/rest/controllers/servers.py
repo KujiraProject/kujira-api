@@ -13,6 +13,7 @@ from kujira.rest.lib.parsing_methods import parse_and_return
 
 @SERVER_BP.route("/<fsid>")
 def all_servers(fsid):
+    """Request for getting all servers"""
     response = send_get('cluster/' + fsid + '/server')
     if response.status_code != 422:
         response = parse_and_return(servers_parse, response)
@@ -21,6 +22,7 @@ def all_servers(fsid):
 
 @SERVER_BP.route("/<fsid>/<fqdn>")
 def server(fsid, fqdn):
+    """Request for getting server of particular fqdn and fsid"""
     response = send_get('cluster/' + fsid + '/server/' + fqdn)
     if response.status_code != 422:
         response = parse_and_return(servers_parse, response)
@@ -29,6 +31,7 @@ def server(fsid, fqdn):
 
 @SERVER_BP.route("/<fqdn>")
 def server_fqdn(fqdn):
+    """Request for getting server of particular fqdn"""
     response = send_get('/server/' + fqdn)
     if response.status_code != 422:
         response = parse_and_return(servers_parse, response)
@@ -36,6 +39,7 @@ def server_fqdn(fqdn):
 
 
 def servers_parse(json_dict):
+    """Servers parser to JSON API format"""
     print json_dict
     try:
         new_dict = json_dict[0]

@@ -13,6 +13,7 @@ from kujira.rest.lib.parsing_methods import parse_and_return
 
 @MON_BP.route("/<fsid>")
 def all_monitors(fsid):
+    '''Request for getting all monitors'''
     response = send_get('cluster/' + fsid + '/mon')
     if response.status_code != 422:
         response = parse_and_return(mons_parse, response)
@@ -21,6 +22,7 @@ def all_monitors(fsid):
 
 @MON_BP.route("/<fsid>/<name>")
 def monitor(fsid, name):
+    '''Request for getting monitor of particular name'''
     response = send_get('cluster/' + fsid + '/mon/' + name)
     if response.status_code != 422:
         response = parse_and_return(mons_parse, response)
@@ -28,6 +30,7 @@ def monitor(fsid, name):
 
 
 def mons_parse(json_dict):
+    '''Monitors parser to JSON API format'''
     try:
         new_dict = json_dict[0]
     except Exception as e:
