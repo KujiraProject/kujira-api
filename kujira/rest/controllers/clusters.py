@@ -11,6 +11,7 @@ from kujira.rest.lib.parsing_methods import parse_and_return
 
 @CLUSTER_BP.route("")
 def cluster():
+    """Request for getting all clusters"""
     response = send_get('cluster')
     if response.status_code != 422:
         response = parse_and_return(clusters_parse, response)
@@ -18,6 +19,7 @@ def cluster():
 
 
 def clusters_parse(json_dict):
+    """Clusters parser to JSON API format"""
     try:
         new_dict = json_dict[0]
     except Exception as e:

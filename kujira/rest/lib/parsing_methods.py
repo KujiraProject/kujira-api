@@ -9,6 +9,7 @@ from flask import Response
 
 
 def parse_and_return(method, response):
+    """Method which is parsing response using appropriate method and creates JSON Response"""
     json_response = json.dumps(response)
     json_dict = json.loads(json_response)
     output = method(json_dict)
@@ -17,6 +18,7 @@ def parse_and_return(method, response):
 
 
 def create_error_422(source, message):
+    """Method which creates error with StatusCode 422 and creates JSON Response with it"""
     errors = {'errors': [{'status': '422'}]}
     errors['errors'][0]['source'] = str(source)
     errors['errors'][0]['details'] = message
