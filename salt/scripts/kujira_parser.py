@@ -49,7 +49,7 @@ def put_event_data_in_redis_queue(event_data, redis_handler):
     redis_handler.push_event_to_queue(event_data)
     
 
-def calamari_event_handler(event, redis_handler):
+def calamari_event_handler(event, _): # redis_handler
     """Handle salt event from calamari
 
     :param event: event to handle
