@@ -32,9 +32,9 @@ def pools_parse(json_dict):
     """Pools parser to JSON API format"""
     try:
         new_dict = json_dict[0]
-    except Exception as e:
+    except KeyError as err:
         new_dict = json_dict
-        logging.warning(e.message)
+        logging.warning(str(err))
     root = {'data': []}
     attributes = {}
     if new_dict:

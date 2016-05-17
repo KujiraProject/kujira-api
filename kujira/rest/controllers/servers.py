@@ -40,12 +40,11 @@ def server_fqdn(fqdn):
 
 def servers_parse(json_dict):
     """Servers parser to JSON API format"""
-    print json_dict
     try:
         new_dict = json_dict[0]
-    except Exception as e:
+    except KeyError as err:
         new_dict = json_dict
-        logging.warning(e.message)
+        logging.warning(str(err))
     root = {'data': []}
     attributes = {}
     if new_dict:
@@ -61,7 +60,7 @@ def servers_parse(json_dict):
                 data['id'] = str(value)
             elif str(key) == 'services':
                 relationships = []
-                for index in range(len(value)):
+                for index in enumerate(value):
                     if isinstance(value[index], dict):
                         relationships.append(servers_parse(value[index]))
                     else:

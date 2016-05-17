@@ -32,9 +32,9 @@ def osds_parse(json_dict):
     """Osds parser to JSON API format"""
     try:
         new_dict = json_dict[0]
-    except Exception as e:
+    except KeyError as err:
         new_dict = json_dict
-        logging.warning(e.message)
+        logging.warning(str(err))
     root = {'data': []}
     attributes = {}
     if new_dict:
@@ -46,7 +46,7 @@ def osds_parse(json_dict):
                 attributes[key] = value
             elif isinstance(value, list):
                 lst = []
-                for index in range(len(value)):
+                for index in enumerate(value):
                     if isinstance(value[index], dict):
                         lst.append(osds_parse(value[index]))
                     else:

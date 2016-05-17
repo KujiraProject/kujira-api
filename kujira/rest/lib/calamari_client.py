@@ -22,7 +22,6 @@ class CalamariClient(object):
                         'password': self._password
                     },
                     timeout=self._timeout)
-        print client.cookies
         return client
 
     def get(self, endpoint):
