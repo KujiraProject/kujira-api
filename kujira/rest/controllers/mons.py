@@ -4,49 +4,54 @@ Methods mapped:
 - api/v2/clusters/fsid/mon/name
 - api/v2/clusters/fsid/mon/name/status"""
 
-import logging
-
 from kujira.blueprints import MON_BP
-from kujira.rest.lib.request_methods import send_get
 from kujira.rest.lib.parsing_methods import parse_and_return
+from kujira.rest.lib.request_methods import send_get
+from flask import Response
 
 
 @MON_BP.route("/<fsid>")
 def all_monitors(fsid):
-    '''Request for getting all monitors'''
+    """Request for getting all monitors"""
     response = send_get('cluster/' + fsid + '/mon')
-    if response.status_code != 422:
-        response = parse_and_return(mons_parse, response)
+    if not isinstance(response, Response):
+        response = parse_and_return(parse_mons, response)
     return response
 
 
 @MON_BP.route("/<fsid>/<name>")
 def monitor(fsid, name):
-    '''Request for getting monitor of particular name'''
+    """Request for getting monitor of particular name"""
     response = send_get('cluster/' + fsid + '/mon/' + name)
-    if response.status_code != 422:
-        response = parse_and_return(mons_parse, response)
+    if not isinstance(parse_mons, Response):
+        response = parse_and_return(parse_mons, response)
     return response
 
 
-def mons_parse(json_dict):
-    '''Monitors parser to JSON API format'''
-    try:
-        new_dict = json_dict[0]
-    except Exception as e:
-        new_dict = json_dict
-        logging.warning(e.message)
-    root = {'data': []}
+def parse_mons(mons):
+    """Function which parses mons list or dict into JSON API format"""
+    result = {
+        'data': []
+    }
+    if isinstance(mons, list):
+        for mon_dict in mons:
+            current_mon = parse_mon(mon_dict)
+    else:
+        current_mon = parse_mon(mons)
+    result['data'].append(current_mon)
+    return result
+
+
+def parse_mon(mon_dict):
+    """Function which restructures mon's dict entries into appropriate categories"""
+    result = {
+        'type': 'mons'
+    }
     attributes = {}
-    if new_dict:
-        data = {'type': 'mons'}
-        for key, value in new_dict.iteritems():
-            key = key.replace('_', '-')
-            if str(key) == 'name':
-                data['id'] = str(value)
-                attributes[key] = value
-            else:
-                attributes[key] = value
-        data['attributes'] = attributes
-    root['data'].append(data)
-    return root
+    for key, value in mon_dict.iteritems():
+        key = key.replace('_', '-')
+        if str(key) == 'name':
+            result['id'] = str(value)
+        attributes[str(key)] = value
+    result['attributes'] = attributes
+    return result
