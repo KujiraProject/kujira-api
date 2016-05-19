@@ -3,8 +3,9 @@ Event notification
 
 Defines class used to periodically send event notifications via websocket.
 """
-
 from kujira.websocket.lib.notification_thread import NotificationThread
+from kujira.store.events_queue import RedisQueue
+import json
 
 
 class EventNotificationThread(NotificationThread):
@@ -14,14 +15,27 @@ class EventNotificationThread(NotificationThread):
         """
         Initialize object
 
-        Keyword arguments:
-        socket -- instance of SocketIO class
-        room_information -- dictionary with room and event names
+        :param socket: instance of SocketIO class
+        :param room_information: dictionary with room and event names
         """
         NotificationThread.__init__(self, socket, room_information)
+        self.redis_handler = RedisQueue()
+        self.redis_handler.connect()
 
     def get_data(self):
-        """Collect data from Redis"""
-        return {"eventType": "Warning",
-                "id": 420,
-                "message": "High memory usage."}
+        """
+        Collect data from Redis, and return message dict
+
+        :returns: message dict
+        """
+        data = self.redis_handler.pop()
+        return json.loads(data)
+
+    def check_connection(self):
+        """
+        Check connection to data source
+        
+        :returns: connection status
+        """
+        return self.redis_handler.is_connected()
+        

@@ -10,6 +10,7 @@ from flask import request
 from flask_socketio import join_room, leave_room, disconnect
 from kujira.websocket.lib.room_management import add_user_to_room, \
     remove_user_from_room, remove_user
+from kujira.websocket.exceptions.invalid_room_error import InvalidExceptionError
 # Instance of SocketIO class
 from kujira import SOCKETIO
 
@@ -17,15 +18,23 @@ from kujira import SOCKETIO
 @SOCKETIO.on('join', namespace='/kujira')
 def join(message):
     """Join desired room for further communication"""
-    join_room(message['room'])
-    add_user_to_room(message['room'], request.sid)
+    try:
+        add_user_to_room(message['room'], request.sid)
+        join_room(message['room'])
+    except InvalidExceptionError:
+        #SOCKETIO.emit("Message", {'MESSAGE': 'Invalid room name.'},
+        #              namespace='/kujira')
+        pass
 
 
 @SOCKETIO.on('leave', namespace='/kujira')
 def leave(message):
     """Leave desired room to stop further communication"""
-    leave_room(message['room'])
-    remove_user_from_room(message['room'], request.sid)
+    try:
+        remove_user_from_room(message['room'], request.sid)
+        leave_room(message['room'])
+    except InvalidExceptionError:
+        pass
 
 
 @SOCKETIO.on('disconnect request', namespace='/kujira')
