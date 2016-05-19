@@ -55,7 +55,7 @@ def parse_osd(osd_dict):
             attributes[key] = value
         elif isinstance(value, list):
             lst = []
-            for index in range(len(value)):
+            for index in enumerate(value):
                 if isinstance(value[index], dict):
                     lst.append(parse_osd(value[index]))
                 else:

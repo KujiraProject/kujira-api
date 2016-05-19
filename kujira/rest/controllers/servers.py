@@ -70,7 +70,7 @@ def parse_server(server_dict):
             result['id'] = str(value)
         elif str(key) == 'services':
             relationships = []
-            for index in range(len(value)):
+            for index in enumerate(value):
                 if isinstance(value[index], dict):
                     new_relative = {'data': parse_server(value[index])}
                     relationships.append(new_relative)

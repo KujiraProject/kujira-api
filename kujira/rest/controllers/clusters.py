@@ -5,7 +5,7 @@ Methods mapped:
 from flask import Response
 
 from kujira.blueprints import CLUSTER_BP
-from kujira.rest.lib.parsing_methods import parse_and_return
+from kujira.rest.lib.parsing_methods import parse_and_return, parse_cluster_pool
 from kujira.rest.lib.request_methods import send_get
 
 
@@ -24,21 +24,7 @@ def parse_clusters(clusters):
         'data': []
     }
     for cluster_dict in clusters:
-        current_cluster = parse_cluster(cluster_dict)
+        current_cluster = parse_cluster_pool('clusters', cluster_dict)
     result['data'].append(current_cluster)
     return result
 
-
-def parse_cluster(cluster_dict):
-    """Function which restructures cluster's dict entries into appropriate categories"""
-    result = {
-        'type': 'clusters'
-    }
-    attributes = {}
-    for key, value in cluster_dict.iteritems():
-        key = key.replace('_', '-')
-        if str(key) == 'id':
-            result['id'] = str(value)
-        attributes[str(key)] = value
-    result['attributes'] = attributes
-    return result

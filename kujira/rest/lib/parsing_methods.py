@@ -28,3 +28,18 @@ def create_error_422(source, message):
                            content_type="application/vnd.api+json",
                            status=422)
     return json_errors
+
+
+def parse_cluster_pool(type_name, content_dict):
+    """Function which restructures cluster's dict entries into appropriate categories"""
+    result = {
+        'type': type_name
+    }
+    attributes = {}
+    for key, value in content_dict.iteritems():
+        key = key.replace('_', '-')
+        if str(key) == 'id':
+            result['id'] = str(value)
+        attributes[str(key)] = value
+    result['attributes'] = attributes
+    return result
