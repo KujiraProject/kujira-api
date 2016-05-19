@@ -25,5 +25,6 @@ def create_error_422(source, message):
     errors['errors'][0]['source'] = str(source)
     errors['errors'][0]['details'] = message
     json_errors = Response(json.dumps(errors, indent=2),
-                           content_type="application/vnd.api+json", status=422)
+                           content_type="application/vnd.api+json",
+                           status=422)
     return json_errors

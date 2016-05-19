@@ -3,7 +3,7 @@ Methods mapped:
 - api/v2/clusters/fsid/osd
 - api/v2/clusters/fsid/osd/osd_id"""
 
-import logging
+from flask import Response
 
 from kujira.blueprints import OSD_BP
 from kujira.rest.lib.parsing_methods import parse_and_return
@@ -14,8 +14,8 @@ from kujira.rest.lib.request_methods import send_get
 def all_osds(fsid):
     """Request for getting all osds"""
     response = send_get('cluster/' + fsid + '/osd')
-    if response.status_code != 422:
-        response = parse_and_return(osds_parse, response)
+    if not isinstance(response, Response):
+        response = parse_and_return(parse_osds, response)
     return response
 
 
@@ -23,37 +23,45 @@ def all_osds(fsid):
 def osd(fsid, osd_id):
     """Request for getting monitor of particular id"""
     response = send_get('cluster/' + fsid + '/osd/' + osd_id)
-    if response.status_code != 422:
-        response = parse_and_return(osds_parse, response)
+    if not isinstance(response, Response):
+        response = parse_and_return(parse_osds, response)
     return response
 
 
-def osds_parse(json_dict):
-    """Osds parser to JSON API format"""
-    try:
-        new_dict = json_dict[0]
-    except KeyError as err:
-        new_dict = json_dict
-        logging.warning(str(err))
-    root = {'data': []}
+def parse_osds(osds):
+    """Function which parses osds' list or dict into JSON API format"""
+    result = {
+        'data': []
+    }
+    if isinstance(osds, list):
+        for osd_dict in osds:
+            current_osd = parse_osd(osd_dict)
+    else:
+        current_osd = parse_osd(osds)
+    result['data'].append(current_osd)
+    return result
+
+
+def parse_osd(osd_dict):
+    """Function which restructures osd's dict entries into appropriate categories"""
+    result = {
+        'type': 'osds'
+    }
     attributes = {}
-    if new_dict:
-        data = {'type' : 'osds'}
-        for key, value in new_dict.iteritems():
-            key = key.replace('_', '-')
-            if str(key) == 'id':
-                data['id'] = str(value)
-                attributes[key] = value
-            elif isinstance(value, list):
-                lst = []
-                for index in enumerate(value):
-                    if isinstance(value[index], dict):
-                        lst.append(osds_parse(value[index]))
-                    else:
-                        lst.append(value[index])
-                attributes[key] = lst
-            else:
-                attributes[key] = value
-        data['attributes'] = attributes
-    root['data'].append(data)
-    return root
+    for key, value in osd_dict.iteritems():
+        key = key.replace('_', '-')
+        if str(key) == 'id':
+            result['id'] = str(value)
+            attributes[key] = value
+        elif isinstance(value, list):
+            lst = []
+            for index in range(len(value)):
+                if isinstance(value[index], dict):
+                    lst.append(parse_osd(value[index]))
+                else:
+                    lst.append(value[index])
+            attributes[key] = lst
+        else:
+            attributes[key] = value
+    result['attributes'] = attributes
+    return result
