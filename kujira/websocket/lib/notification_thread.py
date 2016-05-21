@@ -93,8 +93,8 @@ class NotificationThread(threading.Thread):
         """
         Send standard message dict without data
 
-        :param message: message_type
-        :param message: name
+        :param message_type: message_type
+        :param name: name
         :param message: message
         """
         message = {"type": message_type,
