@@ -1,5 +1,5 @@
 """
-Module defines excepitns used in  websocket module
+Package defines excepitns used in websocket module
 """
 
 class InvalidRoomNameError(Exception):

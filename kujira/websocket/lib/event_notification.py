@@ -24,17 +24,17 @@ class EventNotificationThread(NotificationThread):
 
     def get_data(self):
         """
-        Collect data from Redis, and return message dict
+        Collect data from Redis, and return message dictionary
 
-        :returns: message dict
+        :returns: message dictionary
         """
         data = self.redis_handler.pop()
         return json.loads(data)
 
     def check_connection(self):
         """
-        Check connection to data source
-        
+        Check connection to Redis
+
         :returns: connection status
         """
         return self.redis_handler.is_connected()

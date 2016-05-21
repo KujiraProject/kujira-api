@@ -33,9 +33,9 @@ class NotificationThread(threading.Thread):
 
     def get_data(self):
         """
-        Collect data, and return message dict
+        Collect data, and return message dictionary
 
-        :returns: message dict
+        :returns: message dictionary
         """
         pass
 
@@ -56,11 +56,15 @@ class NotificationThread(threading.Thread):
         LOGGER.debug("[" + self.room_name + "] Exception occurred: " +
                      exception_message)
 
-        while not self.check_connection():
-            self.send_message("ERROR", self.room_name,
-                              "Data source unreachable")
-            LOGGER.debug("[" + self.room_name + "] Data source unreachable.")
-            time.sleep(10)
+        while True:
+            try:
+                self.check_connection()
+                break
+            except ConnectionError:
+                self.send_message("ERROR", self.room_name,
+                                  "Data source unreachable")
+                LOGGER.debug("[" + self.room_name + "] Data source unreachable")
+                time.sleep(10)
 
         self.send_message("NOTIFICATION", self.room_name,
                           "Connection restored.")
@@ -68,7 +72,7 @@ class NotificationThread(threading.Thread):
 
     def send_data(self, data):
         """
-        Send data via websocket
+        Send data via websocket to current room
 
         :param data: data retrived from data source
         """
@@ -86,16 +90,19 @@ class NotificationThread(threading.Thread):
                 data = self.get_data()
             except ConnectionError as exception:
                 self.handle_data_source_exception(exception.message)
+                continue
 
             self.send_data(data)
 
     def send_message(self, message_type, name, message):
         """
-        Send standard message dict without data
+        Send message to current room.
+        SocketIO event: "MESSAGE"
+        namespace: /kujira
 
-        :param message_type: message_type
-        :param name: name
-        :param message: message
+        :param message_type: Type of the message
+        :param name: Name of the message
+        :param message: Content of the message
         """
         message = {"type": message_type,
                    "name": name,

@@ -1,7 +1,7 @@
 """
 Diagram notification
 
-Defines class used to periodically send diagram notifications via websocket.
+Defines class used to periodically send graph data via websocket.
 Temporary implementation.
 """
 import time
@@ -24,15 +24,15 @@ class GraphNotificationThread(NotificationThread):
 
     def get_data(self):
         """
-        Collect data from Redis, and return message dict
+        Collect data from Redis, and return message dictionary
 
-        :returns: message dict
+        :returns: message dictionary
         """
         # Temporary implementation
         time.sleep(2)
         self.count += 1
         data = {"x": self.count, "y": self.count}
-        message = {"type": self.notification_name,
+        message = {"type": "DATA",
                    "name": self.room_name,
                    "message": "Data chunk",
                    "data": data}

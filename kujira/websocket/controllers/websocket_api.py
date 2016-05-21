@@ -27,7 +27,7 @@ def join(message):
         send_message("NOTIFICATION", "Room status", "Room joined.",
                      {"room":message['room']})
     except InvalidRoomNameError:
-        send_message("NOTIFICATION", "Room status", "Invalid room name.",
+        send_message("ERROR", "Room status", "Invalid room name.",
                      {"room":message['room']})
 
 
@@ -44,7 +44,7 @@ def leave(message):
         send_message("NOTIFICATION", "Room status", "Room joined.",
                      {"room":message['room']})
     except InvalidRoomNameError:
-        send_message("NOTIFICATION", "Room status", "Invalid room name.",
+        send_message("ERROR", "Room status", "Invalid room name.",
                      {"room":message['room']})
 
 
