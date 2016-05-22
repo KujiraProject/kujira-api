@@ -5,3 +5,15 @@
 
 # kujira-api
 API service for Kujira written in Flask and Python.
+
+Websocket dependencies:
+   pip install eventlet
+   pip install Flask
+   pip install flask-socketio
+
+How to run server:
+   sudo python kujira-api/server.py
+
+The server starts at the address: localhost:5000. 
+To change the address of the host you have to edit
+   kujira-api/config.py

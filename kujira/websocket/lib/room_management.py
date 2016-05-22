@@ -66,7 +66,7 @@ def add_user_to_room(room_name, user_sid):
 
 def remove_user_from_room(room_name, user_sid):
     """
-    Remove user from room
+    Remove user from given room
 
     :param room_name: room name
     :param user_sid: user SID
@@ -93,5 +93,4 @@ def remove_user(user_sid):
     # Iterate through each room
     for room_name in USERS_IN_ROOM.keys():
         remove_user_from_room(room_name, user_sid)
-
-                         
+             

@@ -37,3 +37,13 @@ class GraphNotificationThread(NotificationThread):
                    "message": "Data chunk",
                    "data": data}
         return message
+
+
+    def check_connection(self):
+        """
+        Check connection to Redis
+
+        :returns: connection status
+        """
+        return True
+        

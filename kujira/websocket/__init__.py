@@ -1,7 +1,7 @@
 """
 Websocket package
 
-Handles server-client communications
+Handles server-client communications: event and graph data
 """
 import logging
 
