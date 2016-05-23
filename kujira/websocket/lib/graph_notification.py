@@ -1,15 +1,15 @@
 """
-Event notification
+Diagram notification
 
-Defines class used to periodically send event notifications via websocket.
+Defines class used to periodically send graph data via websocket.
+Temporary implementation.
 """
-import json
+import time
 from kujira.websocket.lib.notification_thread import NotificationThread
-from kujira.store.events_queue import RedisQueue
 
 
-class EventNotificationThread(NotificationThread):
-    """Stoppable thread for event notification via websocket"""
+class GraphNotificationThread(NotificationThread):
+    """Stoppable thread for diagram notification via websocket"""
 
     def __init__(self, socket, room_information):
         """
@@ -19,8 +19,8 @@ class EventNotificationThread(NotificationThread):
         :param room_information: dictionary with room and event names
         """
         NotificationThread.__init__(self, socket, room_information)
-        self.redis_handler = RedisQueue()
-        self.redis_handler.connect()
+        # Temporary implementation
+        self.count = 0
 
     def get_data(self):
         """
@@ -28,8 +28,16 @@ class EventNotificationThread(NotificationThread):
 
         :returns: message dictionary
         """
-        data = self.redis_handler.pop()
-        return json.loads(data)
+        # Temporary implementation
+        time.sleep(2)
+        self.count += 1
+        data = {"x": self.count, "y": self.count}
+        message = {"type": "DATA",
+                   "name": self.room_name,
+                   "message": "Data chunk",
+                   "data": data}
+        return message
+
 
     def check_connection(self):
         """
@@ -37,5 +45,5 @@ class EventNotificationThread(NotificationThread):
 
         :returns: connection status
         """
-        return self.redis_handler.is_connected()
+        return True
         

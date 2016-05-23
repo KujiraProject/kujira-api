@@ -11,7 +11,7 @@ eventlet.monkey_patch()
 SOCKETIO = SocketIO()
 
 
-def create_app(debug=False):
+def create_app():
     """Create an application."""
     app = Flask(__name__)
 
@@ -21,7 +21,6 @@ def create_app(debug=False):
     app.register_blueprint(MON_BP)
     app.register_blueprint(CLUSTER_BP)
 
-    app.debug = debug
     app.config.from_object('config')
 
     SOCKETIO.init_app(app, engineio_logger=True, async_mode='eventlet')

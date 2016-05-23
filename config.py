@@ -1,14 +1,13 @@
-# Statement for enabling the development environment
+"""
+Configuration file.
+"""
+
 DEBUG = True
 
-# Define the application directory
-import os
-BASE_DIR = os.path.abspath(os.path.dirname(__file__))
-
-# Application threads. A common general assumption is
-# using 2 per available processor cores - to handle
-# incoming requests using one and performing background
-# operations using the other.
+# Server config
+HOST = 'localhost'
+#HOST = '0.0.0.0'
+PORT = 5000
 
 # Secret key for signing cookies
 SECRET_KEY = "secret"
