@@ -59,9 +59,3 @@ target/
 
 #Ipython Notebook
 .ipynb_checkpoints
-
-# PyCharm project settings
-.idea
-
-# Exclude rest libraries directory
-!kujira/rest/lib/
