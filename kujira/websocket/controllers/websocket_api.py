@@ -41,7 +41,7 @@ def leave(message):
     try:
         remove_user_from_room(message['room'], request.sid)
         leave_room(message['room'])
-        send_message("NOTIFICATION", "Room status", "Room joined.",
+        send_message("NOTIFICATION", "Room status", "Room left.",
                      {"room":message['room']})
     except InvalidRoomNameError:
         send_message("ERROR", "Room status", "Invalid room name.",
