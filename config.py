@@ -14,7 +14,7 @@ BASE_DIR = os.path.abspath(os.path.dirname(__file__))
 SECRET_KEY = "secret"
 
 # Default Calamari API url
-CALAMARI_API_URL = "http://192.168.244.1/api/v2/"
+CALAMARI_API_URL = "http://192.168.56.1:8080/api/v2/"
 
 # Default Calamari API username
 CALAMARI_API_USER = "admin"

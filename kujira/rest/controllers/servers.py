@@ -4,10 +4,11 @@ Methods mapped:
 - api/v2/clusters/fsid/server/fqdn
 - api/v2/server/fqdn"""
 
+from flask import Response
+
 from kujira.blueprints import SERVER_BP
 from kujira.rest.lib.parsing_methods import parse_and_return
 from kujira.rest.lib.request_methods import send_get
-from flask import Response
 
 
 @SERVER_BP.route("/<fsid>")
@@ -58,7 +59,6 @@ def parse_server(server_dict):
         'type': 'servers'
     }
     attributes = {}
-    print ('hop')
     for key, value in server_dict.iteritems():
         key = key.replace('_', '-')
         if str(key) == 'fqdn':
@@ -70,7 +70,7 @@ def parse_server(server_dict):
             result['id'] = str(value)
         elif str(key) == 'services':
             relationships = []
-            for index in range(len(value)):
+            for index in enumerate(value):
                 if isinstance(value[index], dict):
                     new_relative = {'data': parse_server(value[index])}
                     relationships.append(new_relative)

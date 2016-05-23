@@ -3,10 +3,11 @@ Methods mapped:
 - api/v2/clusters/fsid/osd
 - api/v2/clusters/fsid/osd/osd_id"""
 
+from flask import Response
+
 from kujira.blueprints import OSD_BP
 from kujira.rest.lib.parsing_methods import parse_and_return
 from kujira.rest.lib.request_methods import send_get
-from flask import Response
 
 
 @OSD_BP.route("/<fsid>")
@@ -54,7 +55,7 @@ def parse_osd(osd_dict):
             attributes[key] = value
         elif isinstance(value, list):
             lst = []
-            for index in range(len(value)):
+            for index in enumerate(value):
                 if isinstance(value[index], dict):
                     lst.append(parse_osd(value[index]))
                 else:

@@ -4,10 +4,11 @@ Methods mapped:
 - api/v2/clusters/fsid/mon/name
 - api/v2/clusters/fsid/mon/name/status"""
 
+from flask import Response
+
 from kujira.blueprints import MON_BP
 from kujira.rest.lib.parsing_methods import parse_and_return
 from kujira.rest.lib.request_methods import send_get
-from flask import Response
 
 
 @MON_BP.route("/<fsid>")
