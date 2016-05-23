@@ -5,7 +5,6 @@ Handles server-client communications: event and graph data
 """
 import logging
 import os
-import errno
 
 LOGGER_FILE_PATH = '/var/log/kujira/websocket.log'
 
