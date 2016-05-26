@@ -25,27 +25,38 @@ except ImportError:
     class TaskStorage(object):
         def __init__(self):
             self.nt = 0
-            self.tasks = [{"host": "mng",   "module": 'test.sleep', "arg": "3",   "jid": "", "status": ""},
-                          {},  # It means that there isnt any task at the moment
-                          {},  # It means that there isnt any task at the moment
-                          {"host": "node1",   "module": 'cmd.run',    "arg": "pepe", "jid": "", "status": ""},
-                          {"host": "node2", "module": 'test.sleep', "arg": "1",    "jid": "", "status": ""},
-                          {},  # It means that there isnt any task at the moment
-                          {"host": "mng",   "module": 'cmd.run',    "arg": "ls",   "jid": "", "status": ""}]
+            self.tasks = [[{"host": "mng",   "module": 'test.sleep', "arg": "3",   "jid": "", "status": ""}],
+                          [{}],  # It means that there isnt any task at the moment
+                          [{}],  # It means that there isnt any task at the moment
+                          [{"host": "node1",   "module": 'cmd.run',    "arg": "pepe", "jid": "", "status": ""},
+                          {"host": "node1", "module": 'test.sleep', "arg": "1",    "jid": "", "status": ""}],
+                          [{}],  # It means that there isnt any task at the moment
+                          [{"host": "mng",   "module": 'cmd.run',    "arg": "ls",   "jid": "", "status": ""}]]
 
         def get_task(self):
             if self.nt >= len(self.tasks):
                 self.nt = 0
 
             task = self.tasks[self.nt]
-            LOG.debug("Feching task: %s", task)
             self.nt = self.nt + 1
             return task
 
         def update(self, task):
-            self.tasks[self.nt - 1] = task
-            LOG.debug("Updating task: %s", task)
+            return
 
+class get_task(object):
+    """Class connect to database and take list with tasks to execute and return task"""
+    def __init__(self):
+        self.tasks = TaskStorage().get_task()
+        self.connection = TaskStorage()
+        
+    def get_task(self):
+        """Function which return task to execute"""
+        if len(self.tasks)==0:
+            self.tasks = self.connection.get_task()
+        if len(self.tasks)!=0:
+            return self.tasks.pop()
+        return
 
 def execute(task):
     """Function which execute tasks"""
@@ -62,7 +73,6 @@ def wait_for_finish(task):
             ret_temp = client_salt.get_cli_returns(task['jid'], task['host'])
             ret = [x for x in ret_temp]
             if ret:
-                LOG.debug(ret)
                 if ret[0][task['host']]['ret'] == True:
                     LOG.info('Task finished. JID: %s', task['jid'])
                     return True
@@ -77,12 +87,14 @@ def wait_for_finish(task):
 
 def start():
     """Main function where take and execute tasks """
+    connect = get_task()
     connection = TaskStorage()
     while True:
-        task = connection.get_task()
+        task = connect.get_task()
         if not task:
             LOG.debug("Waiting %d seconds to ask for next task...", FETCH_TIME)
             time.sleep(FETCH_TIME)  # sleep asking for next task
+            continue
         jid = execute(task)
         task['jid'] = jid
         task['status'] = 'Executing'
