@@ -11,9 +11,7 @@ from flask import Response
 
 def parse_and_return(method, response):
     """Method which is parsing response using appropriate method and creates JSON Response"""
-    json_response = json.dumps(response)
-    json_dict = json.loads(json_response)
-    output = method(json_dict)
+    output = method(response)
     json_output = Response(json.dumps(output, indent=2),
                            content_type='application/json')
     return json_output
