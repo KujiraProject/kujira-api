@@ -10,9 +10,17 @@ from kujira.rest.lib.request_methods import send_get
 from flask import Response
 
 
-@SERVER_BP.route("/<fsid>")
-def all_servers(fsid):
+@SERVER_BP.route("")
+def all_servers():
     """Request for getting all servers"""
+    response = send_get('/server')
+    if not isinstance(response, Response):
+        response = parse_and_return(parse_servers, response)
+    return response
+
+@SERVER_BP.route("/<fsid>")
+def all_servers_cluster(fsid):
+    """Request for getting all servers in a cluster"""
     response = send_get('cluster/' + fsid + '/server')
     if not isinstance(response, Response):
         response = parse_and_return(parse_servers, response)
@@ -58,7 +66,6 @@ def parse_server(server_dict):
         'type': 'servers'
     }
     attributes = {}
-    print 'hop'
     for key, value in server_dict.iteritems():
         key = key.replace('_', '-')
         if str(key) == 'fqdn':
