@@ -21,6 +21,7 @@ def get_cluster():
         response = send_get('cluster/{fsid}/sync_object/health'.format(fsid=fsid))
         response["fsid"] = fsid
         response["name"] = cluster_dict["name"]
+        response["update-time"] = cluster_dict["update_time"]
         return parse_and_return(parse_cluster, response)
 
 
