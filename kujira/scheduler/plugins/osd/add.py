@@ -1,12 +1,24 @@
 # -*- coding: utf-8 -*- 
 
+from kujira.scheduler.plugins.plugin import Plugin
+
 class Add(Plugin):
-    user_descr = "add"
+    
     def is_valid(self):
-        return True, None
+        return (True, None)
 
     def can_run(self):
+        if not self.mongo_check():
+            return (False, "Mongo check failed.")
         return (True, None)
 
     def ceph_query(self):
         pass
+        
+    def mongo_check(self):
+        tasks = self.mongo.get_all_tasks()
+        
+        for task in tasks:
+            if task["title"] == "osd.add" and task["arg"] == self.params["arg"]:
+                return False
+        return True

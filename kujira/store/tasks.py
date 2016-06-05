@@ -52,6 +52,21 @@ class Mongodb(object):
         except IndexError:
             raise exceptions.CursorError('Cursor empty, problem with database!')
 
+    def get_all_tasks(self):
+        """gets all tasks from task collection
+        :returns dictionary with all tasks
+        """
+        try:
+            temporary_cursor =  self.tasks_collection.find()
+            tasks = []
+            for doc in temporary_cursor:
+                tasks.append(doc)
+            return tasks
+        except errors.ConnectionFailure:
+            raise exceptions.ConnectionError('Cannot connect to database!')
+        except IndexError:
+            raise exceptions.CursorError('Cursor empty, problem with database!')
+
     def close_task(self, task_id):
         """moves task from main collection to historical one
         :param task_id: id of task to close
