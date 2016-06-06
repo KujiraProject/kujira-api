@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 
-from kujira.store.tasks import Mongodb
 from datetime import datetime
 
 class Plugin(object):
