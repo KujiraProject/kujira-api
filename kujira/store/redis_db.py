@@ -20,4 +20,4 @@ class RedisConnection(object):
         try:
             return bool(self.connection.ping())
         except redis.ConnectionError:
-            raise exceptions.ConnectionError('Cannot connect to database!')
+            return False
