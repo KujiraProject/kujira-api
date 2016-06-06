@@ -3,7 +3,6 @@ Flask==0.10.1
 Flask-SocketIO==2.2
 eventlet==0.18.4
 Flask-Cors==2.1.2
-python-jose==0.6.1
 redis==2.10.5
 pymongo==3.2.2
 Flask-PAM>=0.1rc1
