@@ -8,8 +8,9 @@ class Plugin(object):
     def __init__(self, **params):
         self.create_date = datetime.now()
         self.params = params
-        self.mongo = Mongodb()
-        self.mongo.connect("mydb", "tasks", "oldTasks")
+
+    def set_db_instance(self, db):
+        self.database = db
 
     def is_valid(self):
         raise NotImplementedError("Plugin.is_valid must be implemented!")

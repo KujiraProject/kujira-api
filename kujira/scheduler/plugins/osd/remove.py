@@ -17,7 +17,7 @@ class Remove(Plugin):
         pass
         
     def check_if_exists(self):
-        tasks = self.mongo.get_all_tasks()
+        tasks = self.db.get_all_tasks()
         
         for task in tasks:
             if (task["title"] == self.name and

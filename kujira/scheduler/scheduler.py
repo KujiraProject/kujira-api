@@ -30,6 +30,8 @@ class Scheduler(object):
 
             plugin = PLUGINS[name](**params)
 
+            plugin.set_db_instance(self.mongo)
+
             is_valid_result = plugin.is_valid()
             if not is_valid_result[0]:
                 return is_valid_result
