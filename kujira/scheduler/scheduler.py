@@ -25,6 +25,8 @@ class Scheduler(object):
     def add_task(self, name, **params): # name = 'osd.add'
         try:
             self.lock.acquire()
+            log.info("Adding new task to queue...")
+
             if not name in PLUGINS.keys():
                 return (False, "Could not find plugin: {}".format(name))
 
