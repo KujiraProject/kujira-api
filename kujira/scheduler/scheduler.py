@@ -4,11 +4,14 @@ from threading import Lock
 from plugins.config import PLUGINS
 from kujira.store.tasks import Mongodb
 
+import logging
+
+log = logging.getLogger(__name__)
+
 class Scheduler(object):
     instance = None
 
     def __init__(self):
-        # Mongo
         self.lock = Lock()
         self.mongo = Mongodb()
         self.mongo.connect("mydb", "tasks", "oldTasks")
@@ -39,8 +42,10 @@ class Scheduler(object):
                                     "arg":params["arg"]})
 
             return (True, None)
+        except NotImplementedError as e:
+            log.error("Some function in plugin is not implemented: " + str(e))
         except:
-            pass
+            log.error("An unknown error occurred!")
         finally:
             self.lock.release()
             
