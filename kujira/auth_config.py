@@ -1,14 +1,14 @@
 # -*- coding: utf-8 -*-
 
-# roles from least to most privileged
+# roles from most to least privileged
 roles = [
-    'kujira3',
-    'kujira2',
-    'kujira1'
+    'kujira_superusers',
+    'kujira_admins',
+    'kujira_users'
 ]
 
 # token lifetime in seconds
-token_lifetime = 60
+token_lifetime = 120
 
 # refresh token lifetime in seconds (-1 == inf)
-refresh_token_lifetime = 600
+refresh_token_lifetime = 240
