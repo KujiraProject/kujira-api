@@ -3,9 +3,15 @@
 from kujira.scheduler.plugins.plugin import Plugin
 
 class Add(Plugin):
-    name = 'osd.add'
+    name = 'kujira.osd.add'
 
     def is_valid(self):
+        if not 'host' in self.params:
+            return (False, "'host' param is required!")
+
+        if not 'device' in self.params:
+            return (False, "'device' param is required!")
+
         return (True, None)
 
     def can_run(self):
@@ -14,15 +20,24 @@ class Add(Plugin):
 
         return (True, None)
 
-    def ceph_query(self):
-        pass
-        
+    def subtasks(self):
+        return [
+            {
+                'host': self.params['host'],
+                'module': self.name,
+                'arg': self.params['device'],
+                'jid': None,
+                'status': None,
+            },
+        ]
+
     def check_if_exists(self):
         tasks = self.db.get_all_tasks()
         
         for task in tasks:
-            if (task["title"] == self.name and
-               task["arg"] == self.params["arg"]):
-                return False
+            for subtask in task['subtasks']:
+                if subtask['module'] == self.name and
+                   subtask['arg'] == self.params['device']:
+                    return False
 
         return True

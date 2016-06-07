@@ -17,9 +17,12 @@ class Plugin(object):
     def can_run(self):
         raise NotImplementedError("Plugin.can_run must be implemented!")
 
+    def subtasks(self):
+        raise NotImplementedError("Plugin.subtasks must be implemented!")
+
     def data(self):
         return {
-            'name': self.name,
-            'date': self.create_date.strftime('%c'),
-            'params': self.params,
-        }
+            'title': self.name,
+            'subtasks': self.subtasks(),
+            'parallel': self.params['parallel']
+       }
