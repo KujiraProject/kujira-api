@@ -1,6 +1,5 @@
 '''module for abstract redis management'''
 import redis
-from . import exceptions
 
 class RedisConnection(object):
     """base class for redis management"""
