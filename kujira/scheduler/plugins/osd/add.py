@@ -10,7 +10,8 @@ class Add(Plugin):
 
     def can_run(self):
         if not self.check_if_exists():
-            return (False, "Mongo check failed.")
+            return (False, "Task already exists!")
+
         return (True, None)
 
     def ceph_query(self):
