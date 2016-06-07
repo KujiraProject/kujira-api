@@ -42,10 +42,7 @@ class Scheduler(object):
             if not can_run_result[0]:
                 return can_run_result
 
-            self.mongo.insert_task({
-                "title": name,
-                "arg": params["arg"]
-            })
+            self.mongo.insert_task(plugin.data())
 
             return (True, None)
         except NotImplementedError as e:
