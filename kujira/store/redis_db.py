@@ -1,6 +1,7 @@
 '''module for abstract redis management'''
 import redis
 
+
 class RedisConnection(object):
     """base class for redis management"""
     def __init__(self, connection_adress, connection_port):

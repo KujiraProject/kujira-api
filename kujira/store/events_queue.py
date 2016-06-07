@@ -1,5 +1,6 @@
 """events queue module"""
 from . import redis_db
+from . import exceptions
 
 
 class RedisQueue(redis_db.RedisConnection):
@@ -15,7 +16,7 @@ class RedisQueue(redis_db.RedisConnection):
         try:
             self.connection.lpush('event_queue', event)
         except redis_db.redis.ConnectionError:
-            raise redis_db.exceptions.ConnectionError(
+            raise exceptions.ConnectionError(
                 'Cannot connect to database!')
 
     def pop(self):
@@ -25,7 +26,7 @@ class RedisQueue(redis_db.RedisConnection):
         try:
             return self.connection.brpop('event_queue')[1].replace("\'", "\"")
         except redis_db.redis.ConnectionError:
-            raise redis_db.exceptions.ConnectionError(
+            raise exceptions.ConnectionError(
                 'Cannot connect to database!')
 
     def is_not_empty(self):
@@ -35,5 +36,5 @@ class RedisQueue(redis_db.RedisConnection):
         try:
             return bool(self.connection.llen('event_queue') > 0)
         except redis_db.redis.ConnectionError:
-            raise redis_db.exceptions.ConnectionError(
+            raise exceptions.ConnectionError(
                 'Cannot connect to database!')
