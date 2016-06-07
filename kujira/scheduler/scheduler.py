@@ -6,7 +6,7 @@ from kujira.store.tasks import Mongodb
 
 import logging
 
-log = logging.getLogger(__name__)
+LOG = logging.getLogger(__name__)
 
 class Scheduler(object):
     instance = None
@@ -25,7 +25,7 @@ class Scheduler(object):
     def add_task(self, name, **params): # name = 'osd.add'
         try:
             self.lock.acquire()
-            log.info("Adding new task to queue...")
+            LOG.info("Adding new task to queue...")
 
             if not name in PLUGINS.keys():
                 return (False, "Could not find plugin: {}".format(name))
@@ -36,19 +36,21 @@ class Scheduler(object):
 
             is_valid_result = plugin.is_valid()
             if not is_valid_result[0]:
+                LOG.error(can_run_result[1])
                 return is_valid_result
 
             can_run_result = plugin.can_run()
             if not can_run_result[0]:
+                LOG.error(can_run_result[1])
                 return can_run_result
 
             self.mongo.insert_task(plugin.data())
 
             return (True, None)
         except NotImplementedError as e:
-            log.error("Some function in plugin is not implemented: " + str(e))
+            LOG.error("Some function in plugin is not implemented: " + str(e))
         except:
-            log.error("An unknown error occurred!")
+            LOG.error("An unknown error occurred!")
         finally:
             self.lock.release()
             
