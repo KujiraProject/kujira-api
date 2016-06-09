@@ -3,7 +3,7 @@
 import eventlet
 from flask import Flask
 from flask_socketio import SocketIO
-from flask.ext.cors import CORS
+from flask_cors import CORS
 from kujira.blueprints import AUTH_BP, SERVER_BP, OSD_BP, POOL_BP, MON_BP, CLUSTER_BP
 from kujira.rest.controllers import osds, pools, servers, clusters, mons
 import kujira.auth
@@ -11,7 +11,6 @@ import kujira.auth
 eventlet.monkey_patch()
 
 SOCKETIO = SocketIO()
-
 
 def create_app():
     """Create an application."""

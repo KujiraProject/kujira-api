@@ -1,25 +1,29 @@
 # -*- coding: utf-8 -*-
 
+"""Flask's Blueprint: Authentication"""
+
+import json
 from flask import Response, request, current_app
 from flask_pam import Auth
 from flask_pam import token
 from flask_pam import token_storage
 from kujira.blueprints import AUTH_BP
-import auth_config
-import json
+from kujira import auth_config
 
-auth = Auth(token_storage.DictStorage,
+AUTH = Auth(token_storage.DictStorage,
             token.JWT,
-            auth_config.token_lifetime,
-            auth_config.refresh_token_lifetime,
+            auth_config.TOKEN_LIFETIME,
+            auth_config.REFRESH_TOKEN_LIFETIME,
             current_app,
             False)
 
 # helper function
 def user_role(username):
+    """Return most privileged user's role"""
+
     role = None
-    user_groups = auth.get_groups(username)
-    for group in auth_config.roles:
+    user_groups = AUTH.get_groups(username)
+    for group in auth_config.ROLES:
         if group in user_groups:
             role = group
             break
@@ -28,8 +32,10 @@ def user_role(username):
 
 @AUTH_BP.route('/refresh', methods=['POST'])
 def refresh():
+    """Generate new token using refresh token"""
+
     data = request.get_json()
-    if not ('refresh_token' in data):
+    if not 'refresh_token' in data:
         return Response(json.dumps({
             'status': False,
             'errors': [
@@ -38,8 +44,8 @@ def refresh():
         }), mimetype='application/json', status=401)
 
     refresh_token = data['refresh_token']
-    result = auth.refresh(refresh_token)
-    
+    result = AUTH.refresh(refresh_token)
+
     if result[0]:
         return Response(json.dumps({
             'status': True,
@@ -62,6 +68,8 @@ def refresh():
 
 @AUTH_BP.route('/authenticate', methods=['POST'])
 def authenticate():
+    """Authenticate user with username and password"""
+
     if request.method == 'POST':
         data = request.get_json()
         if not ('username' in data and
@@ -76,7 +84,7 @@ def authenticate():
         username = data['username'].encode('ascii')
         password = data['password'].encode('ascii')
 
-        result = auth.authenticate(username, password)
+        result = AUTH.authenticate(username, password)
         role = user_role(username)
 
         if result[0]:

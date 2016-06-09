@@ -1,14 +1,16 @@
 # -*- coding: utf-8 -*-
 
+"""Authentication controller configuration"""
+
 # roles from most to least privileged
-roles = [
+ROLES = [
     'kujira_superusers',
     'kujira_admins',
     'kujira_users'
 ]
 
 # token lifetime in seconds
-token_lifetime = 120
+TOKEN_LIFETIME = 120
 
 # refresh token lifetime in seconds (-1 == inf)
-refresh_token_lifetime = 240
+REFRESH_TOKEN_LIFETIME = 240
