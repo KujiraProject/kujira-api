@@ -36,8 +36,8 @@ class Add(Plugin):
         
         for task in tasks:
             for subtask in task['subtasks']:
-                if subtask['module'] == self.name and
-                   subtask['arg'] == self.params['device']:
+                if (subtask['module'] == self.name and
+                   subtask['arg'] == self.params['device']):
                     return False
 
         return True
