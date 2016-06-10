@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-import Queue
 from threading import Lock
 from plugins.config import PLUGINS
 from kujira.store.tasks import Mongodb
