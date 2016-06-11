@@ -18,7 +18,8 @@ class Remove(Plugin):
 
     def can_run(self):
         if not self.check_if_exists():
-            return (False, "Task already exists!")
+            return (False, "Removing OSD {0} from {1} is already in queue!" \
+            .format(self.params['osd_id'], self.params['host']))
 
         return (True, None)
 

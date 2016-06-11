@@ -43,7 +43,7 @@ class Scheduler(object):
             LOG.info("Adding new task to queue...")
 
             if not name in PLUGINS.keys():
-                return (False, "Could not find plugin: {}".format(name))
+                return (False, "Could not find plugin: {0}".format(name))
 
             plugin = PLUGINS[name](**params)
 

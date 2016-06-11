@@ -18,7 +18,9 @@ class Add(Plugin):
 
     def can_run(self):
         if not self.check_if_exists():
-            return (False, "Task already exists!")
+            return (False, "Adding an OSD on device {0} on host {1} " \
+            "is already in queue!".format(self.params['device'],
+                                          self.params['host']))
 
         return (True, None)
 
