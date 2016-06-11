@@ -18,7 +18,9 @@ class Scheduler(object):
     def __init__(self):
         self.lock = Lock()
         self.mongo = Mongodb()
-        self.mongo.connect("mydb", "tasks", "oldTasks")
+        self.mongo.connect(scheduler_config.MONGO_DB,
+                           scheduler_config.MONGO_COLLECTION,
+                           scheduler_config.MONGO_AUDIT_COLLECTION)
 
     @staticmethod
     def get_instance():
