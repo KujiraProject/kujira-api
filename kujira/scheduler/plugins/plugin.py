@@ -12,6 +12,8 @@ class Plugin(object):
         self.params = params
         self.database = None
 
+        if 'parallel' not in self.params:
+            self.params['parallel'] = True
 
     def set_db_instance(self, database):
         """Set instance of mongo database connection
