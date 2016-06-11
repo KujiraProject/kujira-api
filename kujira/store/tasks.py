@@ -57,7 +57,7 @@ class Mongodb(object):
         :returns dictionary with all tasks
         """
         try:
-            temporary_cursor =  self.tasks_collection.find()
+            temporary_cursor = self.tasks_collection.find()
             tasks = []
             for doc in temporary_cursor:
                 tasks.append(doc)
