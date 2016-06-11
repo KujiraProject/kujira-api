@@ -1,15 +1,17 @@
-# -*- coding: utf-8 -*- 
+# -*- coding: utf-8 -*-
+"""This plugin describes task of adding an OSD to cluster"""
 
 from kujira.scheduler.plugins.plugin import Plugin
 
 class Add(Plugin):
+    """Add an OSD to cluster"""
     name = 'kujira.osd.add'
 
     def is_valid(self):
-        if not 'host' in self.params:
+        if 'host' not in self.params:
             return (False, "'host' param is required!")
 
-        if not 'device' in self.params:
+        if 'device' not in self.params:
             return (False, "'device' param is required!")
 
         return (True, None)

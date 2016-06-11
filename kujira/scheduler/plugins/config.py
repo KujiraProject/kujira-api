@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
+"""Map plugin's names to types"""
 
-from osd.add import Add
-from osd.remove import Remove
+from kujira.scheduler.plugins.osd.add import Add
+from kujira.scheduler.plugins.osd.remove import Remove
 
 PLUGINS = {
     "osd.add": Add,

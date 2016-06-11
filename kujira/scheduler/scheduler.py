@@ -1,13 +1,18 @@
 # -*- coding: utf-8 -*-
-from threading import Lock
-from plugins.config import PLUGINS
-from kujira.store.tasks import Mongodb
+"""Tasks' scheduler"""
 
 import logging
+from threading import Lock
+from kujira.scheduler.plugins.config import PLUGINS
+from kujira.store.tasks import Mongodb
+from kujira.scheduler import scheduler_config
 
 LOG = logging.getLogger(__name__)
 
 class Scheduler(object):
+    """Scheduler class
+
+    Check if task can be queued and if so, enqueue that task"""
     instance = None
 
     def __init__(self):
@@ -15,13 +20,22 @@ class Scheduler(object):
         self.mongo = Mongodb()
         self.mongo.connect("mydb", "tasks", "oldTasks")
 
-    def instance(self):
+    @staticmethod
+    def get_instance():
+        """Return the only instance of scheduler
+
+        Return the only instance of Scheduler. In case it doesn't exist
+        it creates one."""
         if not Scheduler.instance:
             Scheduler.instance = Scheduler()
 
         return Scheduler.instance
-    
-    def add_task(self, name, **params): # name = 'osd.add'
+
+    def add_task(self, name, **params):
+        """Add task to database
+
+        :param name: string which identifies scheduler's plugin
+        :param params: dictionary with plugin's parameters"""
         try:
             self.lock.acquire()
             LOG.info("Adding new task to queue...")
@@ -46,10 +60,7 @@ class Scheduler(object):
             self.mongo.insert_task(plugin.data())
 
             return (True, None)
-        except NotImplementedError as e:
-            LOG.error("Some function in plugin is not implemented: " + str(e))
-        except:
-            LOG.error("An unknown error occurred!")
+        except NotImplementedError as exc:
+            LOG.error("Plugin '%s' is not complete: '%s'", name, str(exc))
         finally:
             self.lock.release()
-            

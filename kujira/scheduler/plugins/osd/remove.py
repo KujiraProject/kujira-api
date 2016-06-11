@@ -1,15 +1,17 @@
-# -*- coding: utf-8 -*- 
+# -*- coding: utf-8 -*-
+"""This plugin describes task of removing an OSD from cluster"""
 
 from kujira.scheduler.plugins.plugin import Plugin
 
 class Remove(Plugin):
+    """Remove an OSD from cluster"""
     name = 'kujira.osd.remove'
 
     def is_valid(self):
-        if not 'host' in self.params:
+        if 'host' not in self.params:
             return (False, "'host' param is required!")
 
-        if not 'osd_id' in self.params:
+        if 'osd_id' not in self.params:
             return (False, "'osd_id' param is required!")
 
         return (True, None)
