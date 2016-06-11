@@ -31,6 +31,18 @@ class Plugin(object):
         It should return False if task is duplicate of another one"""
         raise NotImplementedError("Plugin.can_run must be implemented!")
 
+    def check_if_exists(self):
+        """Check if task exists in database"""
+        tasks = self.database.get_all_tasks()
+
+        for task in tasks:
+            for existing_subtask in task['subtasks']:
+                for current_subtask in self.subtasks():
+                    if existing_subtask == current_subtask:
+                        return False
+
+        return True
+
     def subtasks(self):
         """Get subtasks
 

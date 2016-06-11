@@ -33,13 +33,3 @@ class Add(Plugin):
             },
         ]
 
-    def check_if_exists(self):
-        tasks = self.db.get_all_tasks()
-        
-        for task in tasks:
-            for subtask in task['subtasks']:
-                if (subtask['module'] == self.name and
-                   subtask['arg'] == self.params['device']):
-                    return False
-
-        return True
