@@ -49,7 +49,7 @@ class Scheduler(object):
 
             is_valid_result = plugin.is_valid()
             if not is_valid_result[0]:
-                LOG.error(can_run_result[1])
+                LOG.error(is_valid_result[1])
                 return is_valid_result
 
             can_run_result = plugin.can_run()
