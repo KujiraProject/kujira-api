@@ -1,21 +1,18 @@
-import eventlet
-import json
 import unittest
-import requests
-from flask import Flask
-from kujira.blueprints import CLUSTER_BP, SERVER_BP, OSD_BP, POOL_BP, MON_BP
-from kujira.rest.controllers import clusters, osds, pools, servers, mons
+import json
 
-
-from flask_socketio import SocketIO
-
-
-eventlet.monkey_patch()
-SOCKETIO = SocketIO()
+from kujira.blueprints import CLUSTER_BP
+from kujira.rest.controllers import clusters
+from kujira import create_app, SOCKETIO
 
 
 
-"""
+class ClustersTestCase(unittest.TestCase):
+
+
+   def setUp(self):
+
+
    response = clusters.cluster()
    data = json.loads(response.get_data())
 
@@ -58,12 +55,9 @@ SOCKETIO = SocketIO()
        for i in range(len(self.data['data'])):
            self.assertEqual(self.data['data'][i]['attributes']['name'], 'ceph')
 
-"""
 
-constr = CalamariClient(api_url="http://0.0.0.0:8080/api/v2/", username=CALAMARI_API_USER,
-                        password=CALAMARI_API_PWD, timeout=CALAMARI_API_TIMEOUT)
-client = constr.authenticate()
-response = client.get(constr._api_url, timeout=constr._timeout)
-print response.status_code
+if __name__ == '__main__':
+    unittest.main()
+
 
 
