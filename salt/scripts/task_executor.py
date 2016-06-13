@@ -14,46 +14,10 @@ FORMATTER = logging.Formatter('%(asctime)s %(levelname)s %(message)s')
 HANDLER.setFormatter(FORMATTER)
 LOG.addHandler(HANDLER)
 
-FETCH_TIME = 1 #10# interval to fetch next task
-
-try:
-    import TaskStorage
-except ImportError:
-    LOG.error('No connection with mongoDB, using testing tasks...')
-
-    class TaskStorage(object):
-        def __init__(self):
-            self.nt = 0
-            self.tasks = [{}, #empty task
-                          {
-                                "parallel": False,
-                                "title": "Add node5 to Ceph",
-                                "subtask":[{"host": "mng",   "module": 'test.sleep', "arg": "5",   "jid": "", "status": ""},
-                                    {"host": "mng",   "module": 'test.sleep', "arg": "5",   "jid": "", "status": ""},
-                                    {"host": "mng",   "module": 'test.sleep', "arg": "5",   "jid": "", "status": ""}
-                                ],
-                          },
-                          {
-                                "parallel": True,
-                                "title": "Add node5 to Ceph",
-                                "subtask":[{"host": "mng",   "module": 'test.sleep', "arg": "40",   "jid": "", "status": ""},
-                                    {"host": "mng",   "module": 'test.sleep', "arg": "40",   "jid": "", "status": ""},
-                                    {"host": "mng",   "module": 'test.sleep', "arg": "40",   "jid": "", "status": ""}
-                                ],
-                          }
-                         ]
-
-        def get_task(self):
-            if self.nt >= len(self.tasks):
-                self.nt = 0
-
-            task = self.tasks[self.nt]
-            self.nt = self.nt + 1
-            return task
-
-        def update(self, task):
-            self.tasks[self.nt - 1] = task
-            LOG.debug("Updating task: %s", task)
+FETCH_TIME = 10# interval to fetch next task
+import sys
+sys.path.append("/opt/kujira/kujira-api/kujira/store/tasks")
+import Mongodb
 
 def execute(subtask):
     """Function which execute tasks"""
@@ -85,17 +49,21 @@ def finish(subtask):
             continue # Check it
 
 def execute_parallel(connection, task):
+    """Function which execute parallel task"""
     jids = []
     #Executions 
     list_subtasks=task['subtask'] #take list of subtask from task
     for i in range(0, len(list_subtasks)):
         subtask = list_subtasks[i]
         jid = execute(subtask)
+        if jid == 0:
+            list_subtasks[i]['status'] = 'Error'
+            continue
         subtask['jid'] = jid
         subtask['status'] = 'Executing'
         jids.append(jid)
         list_subtasks[i] = subtask
-    task['subtask']=list_subtasks
+    task['subtask'] = list_subtasks
     connection.update(task)
     
     #Check
@@ -107,19 +75,23 @@ def execute_parallel(connection, task):
                 jids.remove(subtask['jid'])
     connection.update(task)
     
-def execute_single(connection, task):
-    #Executions 
+def execute_sequential(connection, task):
+    """Function which execute sequential task"""
     list_subtasks=task['subtask'] #take list of subtask from task
     for i in range(0, len(list_subtasks)):
         jid = execute(list_subtasks[i])
+        if jid == 0:
+            list_subtasks[i]['status'] = 'Error'
+            connection.update(task)
+            continue
         list_subtasks[i]['jid'] = jid
         list_subtasks[i]['status'] = 'Executing'
-        task['subtask']=list_subtasks
+        task['subtask'] = list_subtasks
         connection.update(task)
         while True:
-            tmp=finish(list_subtasks[i])
+            tmp = finish(list_subtasks[i])
             if tmp:
-                list_subtasks[i]=tmp
+                list_subtasks[i] = tmp
                 break
         task['subtask']=list_subtasks
         connection.update(task)
@@ -127,16 +99,40 @@ def execute_single(connection, task):
 def start():
     """Main function where take and execute tasks """
     #connect = Configurate_task()
-    connection = TaskStorage()
+    connection = Mongodb()
+    connection.connect("mydb", "tasks", "oldTasks")
+    connection.insert_task({
+                                "date":"",
+                                "task_state":"",
+                                "parallel": False,
+                                "title": "Add node5 to Ceph",
+                                "subtask":[{"host": "node2",   "module": 'test.sleep', "arg": "5",   "jid": "", "status": ""},
+                                    {"host": "mng",   "module": 'test.sleeprt2', "arg": "20",   "jid": "", "status": ""},
+                                    {"host": "mng",   "module": 'test.sleep', "arg": "5",   "jid": "", "status": ""}
+                                ],
+                          })
+                          
+    connection.insert_task({
+                                "task_state":"",
+                                "date":"",
+                                "parallel": True,
+                                "title": "Add node5 to Ceph",
+                                "subtask":[{"host": "mng",   "module": 'test.sleep', "arg": "23",   "jid": "", "status": ""},
+                                    {"host": "mng",   "module": 'test.sleep', "arg": "23",   "jid": "", "status": ""},
+                                    {"host": "mng",   "module": 'test.sleep', "arg": "23",   "jid": "", "status": ""}
+                                ]
+                            })
+          
+                             
     while True:
         task = connection.get_task()
         if not task:
             LOG.debug("Waiting %d seconds to ask for next task...", FETCH_TIME)
             time.sleep(FETCH_TIME)  # sleep asking for next task
             continue
-        LOG.info("Fetch task: {}".format(task))
+        LOG.info("Fetching task: {0}\nParallel: {1}\nSubtask:{2}".format(task["title"],task["parallel"],task["subtask"]))
         if(task['parallel']==True):
             execute_parallel(connection,task)
         else:
-            execute_single(connection, task)
+            execute_sequential(connection, task)
 start()
