@@ -7,6 +7,7 @@ import logging
 import salt.utils.event
 import salt.client
 import salt.config
+import os
 
 LOG = logging.getLogger('executor')
 HANDLER = logging.FileHandler('/var/log/executor.log')
@@ -15,9 +16,14 @@ HANDLER.setFormatter(FORMATTER)
 LOG.addHandler(HANDLER)
 
 FETCH_TIME = 10# interval to fetch next task
+pwd = os.getcwd()
+print(pwd)
+number = (len(pwd)-12)
+pwd = pwd[:number]+"kujira/store/"
+print(pwd)
 import sys
-sys.path.append("/opt/kujira/kujira-api/kujira/store/tasks")
-import Mongodb
+sys.path.append(pwd)
+import tasks
 
 def execute(subtask):
     """Function which execute tasks"""
@@ -64,7 +70,7 @@ def execute_parallel(connection, task):
         jids.append(jid)
         list_subtasks[i] = subtask
     task['subtask'] = list_subtasks
-    connection.update(task)
+    connection.update_tasks(task)
     
     #Check
     while jids:
@@ -73,7 +79,7 @@ def execute_parallel(connection, task):
                 continue
             if finish(subtask):
                 jids.remove(subtask['jid'])
-    connection.update(task)
+    connection.update_tasks(task)
     
 def execute_sequential(connection, task):
     """Function which execute sequential task"""
@@ -82,25 +88,25 @@ def execute_sequential(connection, task):
         jid = execute(list_subtasks[i])
         if jid == 0:
             list_subtasks[i]['status'] = 'Error'
-            connection.update(task)
+            connection.update_tasks(task)
             continue
         list_subtasks[i]['jid'] = jid
         list_subtasks[i]['status'] = 'Executing'
         task['subtask'] = list_subtasks
-        connection.update(task)
+        connection.update_tasks(task)
         while True:
             tmp = finish(list_subtasks[i])
             if tmp:
                 list_subtasks[i] = tmp
                 break
         task['subtask']=list_subtasks
-        connection.update(task)
+        connection.update_tasks(task)
 
 def start():
     """Main function where take and execute tasks """
     #connect = Configurate_task()
-    connection = Mongodb()
-    connection.connect("mydb", "tasks", "oldTasks")
+    connection = tasks.Mongodb()
+    connection.connect("mydb2", "tasks2", "oldTasks2")
     connection.insert_task({
                                 "date":"",
                                 "task_state":"",
