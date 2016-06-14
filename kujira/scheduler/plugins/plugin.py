@@ -5,7 +5,7 @@ from datetime import datetime
 
 class Plugin(object):
     """Plugin class is an abstraction for task"""
-    name = None
+    salt_module_name = None
 
     def __init__(self, **params):
         self.create_date = datetime.now()
@@ -50,11 +50,23 @@ class Plugin(object):
 
         This function returns subtasks which must be executed
         to complete this task"""
-        raise NotImplementedError("Plugin.subtasks must be implemented!")
+        return [
+            {
+                'host': self.params['host'],
+                'module': self.salt_module_name,
+                'arg': None,
+                'jid': None,
+                'status': None,
+            },
+        ]
+
+    def title(self):
+        """Human friendly name of task"""
+        raise NotImplementedError("Plugin.title must be implemented!")
 
     def data(self):
         """Get dictionary containing all information about task"""
         return {
-            'title': self.name,
+            'title': self.title(),
             'subtasks': self.subtasks(),
             'parallel': self.params['parallel']}
