@@ -5,7 +5,7 @@ from kujira.scheduler.plugins.plugin import Plugin
 
 class Remove(Plugin):
     """Remove an OSD from cluster"""
-    name = 'kujira.osd.remove'
+    salt_module_name = 'kujira.osd.remove'
 
     def is_valid(self):
         if 'host' not in self.params:
@@ -23,13 +23,12 @@ class Remove(Plugin):
 
         return (True, None)
 
+    def title(self):
+        return "Remove OSD {osd_id} from node {node}".format(
+            osd_id=self.params['osd_id'],
+            node=self.params['host'])
+
     def subtasks(self):
-        return [
-            {
-                'host': self.params['host'],
-                'module': self.name,
-                'arg': self.params['osd_id'],
-                'jid': None,
-                'status': None,
-            },
-        ]
+        subtasks = super(Remove, self).subtasks()
+        subtasks[0]['arg'] = self.params['osd_id']
+        return subtasks

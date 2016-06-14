@@ -5,7 +5,7 @@ from kujira.scheduler.plugins.plugin import Plugin
 
 class Add(Plugin):
     """Add an OSD to cluster"""
-    name = 'kujira.osd.add'
+    salt_module_name = 'kujira.osd.add'
 
     def is_valid(self):
         if 'host' not in self.params:
@@ -24,14 +24,13 @@ class Add(Plugin):
 
         return (True, None)
 
+    def title(self):
+        return "Add OSD on device {device} on node {node}".format(
+            device=self.params['device'],
+            node=self.params['host'])
+
     def subtasks(self):
-        return [
-            {
-                'host': self.params['host'],
-                'module': self.name,
-                'arg': self.params['device'],
-                'jid': None,
-                'status': None,
-            },
-        ]
+        subtasks = super(Add, self).subtasks()
+        subtasks[0]['device'] = self.params['device']
+        return subtasks
 
