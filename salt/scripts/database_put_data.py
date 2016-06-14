@@ -9,7 +9,7 @@ sys.path.append(pwd)
 import tasks
     
 connection = tasks.Mongodb()
-connection.connect("mydb2", "tasks2", "oldTasks2")
+connection.connect("mydb", "tasks", "oldTasks")
 connection.insert_task({
                             "date":"",
                             "task_state":"",
