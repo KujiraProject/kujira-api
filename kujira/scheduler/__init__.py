@@ -13,6 +13,7 @@ if not os.path.exists(os.path.dirname(LOG_FILE_PATH)):
     os.makedirs(os.path.dirname(LOG_FILE_PATH))
 
 LOG = logging.getLogger(__name__)
+LOG.setLevel(logging.INFO)
 
 LOG_FILE = logging.FileHandler(LOG_FILE_PATH, 'w+')
 
