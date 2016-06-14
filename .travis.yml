@@ -9,7 +9,7 @@ before_install:
   - pip install coveralls
 
 script: |
-  pylint kujira/ && py.test  --cov-config .coveragerc --cov=kujira --doctest-modules  tests/
+  pylint kujira/ ; py.test  --cov-config .coveragerc --cov=kujira --doctest-modules  tests/
 
 after_success:
     - coveralls
