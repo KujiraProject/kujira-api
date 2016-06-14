@@ -19,6 +19,6 @@ class Remove(Plugin):
             .format(self.params['host']))
 
         return (True, None)
-    
+
     def title(self):
         return "Remove MON from node {node}".format(node=self.params['host'])

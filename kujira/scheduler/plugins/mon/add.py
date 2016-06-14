@@ -19,7 +19,7 @@ class Add(Plugin):
             "is already in queue!".format(self.params['host']))
 
         return (True, None)
-        
+
     def title(self):
         return "Add MON on node {node}".format(node=self.params['host'])
 
