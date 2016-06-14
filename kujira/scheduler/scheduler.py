@@ -40,8 +40,6 @@ class Scheduler(object):
         :param params: dictionary with plugin's parameters"""
         try:
             self.lock.acquire()
-            LOG.info("Adding new task to queue...")
-
             if not name in PLUGINS.keys():
                 return (False, "Could not find plugin: {0}".format(name))
 
@@ -60,6 +58,7 @@ class Scheduler(object):
                 return can_run_result
 
             self.mongo.insert_task(plugin.data())
+            LOG.info("Task '%s' added to queue!", plugin.title())
 
             return (True, None)
         except NotImplementedError as exc:
