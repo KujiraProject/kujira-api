@@ -1,5 +1,5 @@
 """Clusters controller test
-   kujira-api must already be running
+   - kujira-api must already be running
 """
 
 import unittest
@@ -27,7 +27,8 @@ class ClustersTestCase(unittest.TestCase):
     def test_expected_response(self):
         """Test for expected response:
               status code= 200,
-              response is dictionary."""
+              response is dictionary
+        """
         self.assertEqual(self.response.status_code, 200)
         self.assertTrue(isinstance(self.data, dict))
 
@@ -40,7 +41,7 @@ class ClustersTestCase(unittest.TestCase):
                     ...
                 }
             }
-            """
+        """
         self.assertIn('data', self.data)
 
 
