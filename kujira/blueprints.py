@@ -2,6 +2,7 @@
 
 from flask import Blueprint
 
+AUTH_BP = Blueprint('auth', __name__, url_prefix="/kujira/api/v1/auth")
 OSD_BP = Blueprint('osd', __name__, url_prefix="/kujira/api/v1/osds")
 POOL_BP = Blueprint('pool', __name__, url_prefix="/kujira/api/v1/pools")
 SERVER_BP = Blueprint('server', __name__, url_prefix="/kujira/api/v1/servers")
