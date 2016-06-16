@@ -7,6 +7,7 @@ import logging
 import salt.utils.event
 import salt.client
 import salt.config
+import os
 
 LOG = logging.getLogger('executor')
 HANDLER = logging.FileHandler('/var/log/executor.log')
@@ -14,87 +15,108 @@ FORMATTER = logging.Formatter('%(asctime)s %(levelname)s %(message)s')
 HANDLER.setFormatter(FORMATTER)
 LOG.addHandler(HANDLER)
 
-FETCH_TIME = 5 # interval to fetch next task
-CHECK_TIME = 2 # interval to check if task finished
+FETCH_TIME = 10# interval to fetch next task
+pwd = os.getcwd()
+print(pwd)
+number = (len(pwd)-12)
+pwd = pwd[:number]+"kujira/store/"
+print(pwd)
+import sys
+sys.path.append(pwd)
+import tasks
 
-try:
-    import TaskStorage
-except ImportError:
-    LOG.error('No connection with mongoDB, using testing tasks...')
-
-    class TaskStorage(object):
-        def __init__(self):
-            self.nt = 0
-            self.tasks = [{"host": "mng",   "module": 'test.sleep', "arg": "3",   "jid": "", "status": ""},
-                          {},  # It means that there isnt any task at the moment
-                          {},  # It means that there isnt any task at the moment
-                          {"host": "node1",   "module": 'cmd.run',    "arg": "pepe", "jid": "", "status": ""},
-                          {"host": "node2", "module": 'test.sleep', "arg": "1",    "jid": "", "status": ""},
-                          {},  # It means that there isnt any task at the moment
-                          {"host": "mng",   "module": 'cmd.run',    "arg": "ls",   "jid": "", "status": ""}]
-
-        def get_task(self):
-            if self.nt >= len(self.tasks):
-                self.nt = 0
-
-            task = self.tasks[self.nt]
-            LOG.debug("Feching task: %s", task)
-            self.nt = self.nt + 1
-            return task
-
-        def update(self, task):
-            self.tasks[self.nt - 1] = task
-            LOG.debug("Updating task: %s", task)
-
-
-def execute(task):
+def execute(subtask):
     """Function which execute tasks"""
-    LOG.info("Executing task: %s", task)
+    LOG.info("Executing subtask: %s", subtask)
     client_salt = salt.client.LocalClient()
-    job_id = client_salt.cmd_async(task["host"], task["module"], [task["arg"]])
+    job_id = client_salt.cmd_async(subtask["host"], subtask["module"], [subtask["arg"]])
     return job_id
 
-def wait_for_finish(task):
+def finish(subtask):
     """Function which wait for task status"""
     client_salt = salt.client.LocalClient()
     while True:
         try:
-            ret_temp = client_salt.get_cli_returns(task['jid'], task['host'])
+            ret_temp = client_salt.get_cli_returns(subtask['jid'], subtask['host'])
             ret = [x for x in ret_temp]
             if ret:
-                LOG.debug(ret)
-                if ret[0][task['host']]['ret'] == True:
-                    LOG.info('Task finished. JID: %s', task['jid'])
-                    return True
+                if ret[0][subtask['host']]['ret'] == True:
+                    LOG.info('Subtask finished. JID: %s', subtask['jid'])
+                    subtask['status'] = 'Finished'
+                    return subtask
                 else:
-                    LOG.info('Task failed. JID: %s', task['jid'])
-                    return False
+                    LOG.info('Subtask failed. JID: %s', subtask['jid'])
+                    subtask['status'] = 'Failed'
+                    return subtask
             else:
-                LOG.info('Task still running. JID: %s', task['jid'])
-            time.sleep(CHECK_TIME)
+                LOG.info('Subtask still running. JID: %s', subtask['jid'])
+                return False
         except KeyError:
             continue # Check it
 
+def execute_parallel(connection, task):
+    """Function which execute parallel task"""
+    jids = []
+    #Executions 
+    list_subtasks=task['subtask'] #take list of subtask from task
+    for i in range(0, len(list_subtasks)):
+        subtask = list_subtasks[i]
+        jid = execute(subtask)
+        if jid == 0:
+            list_subtasks[i]['status'] = 'Error'
+            continue
+        subtask['jid'] = jid
+        subtask['status'] = 'Executing'
+        jids.append(jid)
+        list_subtasks[i] = subtask
+    task['subtask'] = list_subtasks
+    connection.update_tasks(task)
+    
+    #Check
+    while jids:
+        for subtask in list_subtasks:
+            if not subtask['jid'] in jids:
+                continue
+            if finish(subtask):
+                jids.remove(subtask['jid'])
+    connection.update_tasks(task)
+    
+def execute_sequential(connection, task):
+    """Function which execute sequential task"""
+    list_subtasks=task['subtask'] #take list of subtask from task
+    for i in range(0, len(list_subtasks)):
+        jid = execute(list_subtasks[i])
+        if jid == 0:
+            list_subtasks[i]['status'] = 'Error'
+            connection.update_tasks(task)
+            continue
+        list_subtasks[i]['jid'] = jid
+        list_subtasks[i]['status'] = 'Executing'
+        task['subtask'] = list_subtasks
+        connection.update_tasks(task)
+        while True:
+            tmp = finish(list_subtasks[i])
+            if tmp:
+                list_subtasks[i] = tmp
+                break
+        task['subtask']=list_subtasks
+        connection.update_tasks(task)
+
 def start():
     """Main function where take and execute tasks """
-    connection = TaskStorage()
+    #connect = Configurate_task()
+    connection = tasks.Mongodb()
+    connection.connect("mydb2", "tasks2", "oldTasks2")
+                             
     while True:
         task = connection.get_task()
         if not task:
             LOG.debug("Waiting %d seconds to ask for next task...", FETCH_TIME)
             time.sleep(FETCH_TIME)  # sleep asking for next task
-        jid = execute(task)
-        task['jid'] = jid
-        task['status'] = 'Executing'
-        connection.update(task)
-        if jid == 0:
-            task['status'] = 'Error'
-            connection.update(task)
             continue
-        if wait_for_finish(task):
-            task['status'] = 'Finished'
+        LOG.info("Fetching task: {0}\nParallel: {1}\nSubtask:{2}".format(task["title"],task["parallel"],task["subtask"]))
+        if(task['parallel']==True):
+            execute_parallel(connection,task)
         else:
-            task['status'] = 'Failed'
-        connection.update(task)
-        
+            execute_sequential(connection, task)
 start()
