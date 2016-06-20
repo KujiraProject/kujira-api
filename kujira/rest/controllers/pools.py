@@ -19,7 +19,7 @@ def all_pools(fsid):
     return response
 
 
-@POOL_BP.route("/<fsid>/<int:pool_id>")
+@POOL_BP.route("/<fsid>/<pool_id>")
 def pool(fsid, pool_id):
     """Request for pools monitor of particular id"""
     response = send_get('cluster/' + fsid + '/pool/' + str(pool_id))
