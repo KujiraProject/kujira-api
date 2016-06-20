@@ -4,10 +4,6 @@ Methods mapped:
 - api/v2/clusters/fsid/server/fqdn
 - api/v2/server/fqdn"""
 
-import json
-import re
-import subprocess
-
 from flask import Response
 
 from kujira.blueprints import SERVER_BP
@@ -22,40 +18,6 @@ def all_servers():
     if not isinstance(response, Response):
         response = parse_and_return(parse_servers, response)
     return response
-
-
-@SERVER_BP.route("/raw")
-def all_servers_raw():
-    response = send_get('/server')
-    json_list = []
-    for json_obj in response:
-        hostname = json_obj['hostname']
-        if hostname != 'mng':
-            server = {'hostname': hostname}
-            disks = []
-            available = 0
-            size = 0
-            process = subprocess.Popen("sudo salt '"+hostname+"' osd_disk.get_disk_osd_mapping",
-                                                      shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-            bash_output = process.communicate()
-            bash_output = bash_output[0]
-            if bash_output.startswith(hostname):
-                part_dict = json.loads(re.sub(''+hostname+':\n', '', bash_output))
-            for elem in part_dict:
-                elem_str = str(elem)
-                temp = re.search(r'\d+$', elem_str)
-                if elem_str.startswith('/dev/') and temp is None:
-                    disks.append({elem_str: part_dict[elem]})
-                    if 'available' in part_dict[elem]:
-                        available += int(part_dict[elem]['available'][:-1])
-                    if 'size' in part_dict[elem]:
-                        size += int(part_dict[elem]['size'][:-1])
-            server['size'] = str(size)+'M'
-            server['disks_count'] = str(disks.__len__())
-            server['available'] = str(available)+'M'
-            server['disks'] = disks
-            json_list.append(server)
-    return json.dumps(json_list, indent=2)
 
 
 @SERVER_BP.route("/<fsid>")
