@@ -37,5 +37,6 @@ class CalamariAPIConnectionTestCase(unittest.TestCase):
             response = create_error_422(constr._api_url, str(err))
         self.assertEqual(response.status_code, 422)
 
+
 if __name__ == '__main__':
     unittest.main()

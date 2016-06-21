@@ -17,5 +17,6 @@ class PoolsTestCase(common_testing_methods.CommonTestinglMethods):
             data_id = self.data['data'][j]['id']
             self.assertEqual(str(self.data['data'][j]['attributes']['id']), data_id)
 
+
 if __name__ == '__main__':
     common_testing_methods.main()

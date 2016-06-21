@@ -18,5 +18,6 @@ class MonsTestCase(common_testing_methods.CommonTestinglMethods):
             self.assertEqual(self.data['data'][j]['attributes']['name'], data_id)
             self.assertEqual(self.data['data'][j]['attributes']['server'], data_id)
 
+
 if __name__ == '__main__':
     common_testing_methods.main()

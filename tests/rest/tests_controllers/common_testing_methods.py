@@ -145,5 +145,6 @@ class CommonTestinglMethods(unittest.TestCase):
             for k in range(len(self.expected_attributes)):
                 self.assertIn(self.expected_attributes[k], self.data['data'][j]['attributes'])
 
+
 if __name__ == '__main__':
     unittest.main()

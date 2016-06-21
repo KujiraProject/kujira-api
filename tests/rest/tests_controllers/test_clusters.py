@@ -123,6 +123,7 @@ class ClustersTestCase(unittest.TestCase):
         """
         self.assertEqual(self.data['data']['attributes']['name'], 'ceph')
 
+
 if __name__ == '__main__':
     unittest.main()
 
