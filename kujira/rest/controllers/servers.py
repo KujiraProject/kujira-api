@@ -4,9 +4,11 @@ Methods mapped:
 - api/v2/clusters/fsid/server/fqdn
 - api/v2/server/fqdn"""
 
+import json
 from flask import Response
 
 from kujira.blueprints import SERVER_BP
+from kujira.rest.controllers.disks import get_disks
 from kujira.rest.lib.parsing_methods import parse_and_return
 from kujira.rest.lib.request_methods import send_get, check_fsid
 
@@ -32,6 +34,27 @@ def server(hostname):
     """Request for getting server of particular fqdn and fsid"""
     response = check_fsid('cluster/', '/server/'+hostname, parse_servers)
     return response
+
+
+@SERVER_BP.route("/info")
+def server_info():
+    """Request for getting server of particular fqdn and fsid"""
+    servers = all_servers()
+    disks = get_disks()
+    response = parse_info(servers.response, disks)
+    response = Response(response, content_type='application/json')
+    return response
+
+
+def parse_info(servers, disks):
+    disks_list = json.loads(disks)
+    servers_list = json.loads(servers[0])['data']
+    for disk in disks_list:
+        hostname = disk['hostname']
+        for server in servers_list:
+            if server['id'] == hostname:
+                server['attributes']['storage'] = disk
+    return json.dumps(servers_list)
 
 
 def parse_servers(servers):
@@ -77,3 +100,5 @@ def parse_server(server_dict):
             attributes[key] = value
     result['attributes'] = attributes
     return result
+
+
