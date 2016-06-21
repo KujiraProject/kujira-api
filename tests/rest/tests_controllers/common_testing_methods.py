@@ -8,31 +8,20 @@ class CommonTestinglMethods(unittest.TestCase):
     """Base class for mons, osds and pools controllers test cases"""
 
     clusters_data = None
-    clusters_id = None
     response = None
     data = None
     type = None
     expected_attributes = None
 
     def setUp(self):
-        self.clusters_data = requests.get("http://0.0.0.0:5000/kujira/api/v1/clusters").json()
-        self.clusters_id = self.get_clusters_id()
-        self.response = requests.get("http://0.0.0.0:5000/kujira/api/v1/" + self.type + "/" + self.clusters_id)
+        self.clusters_data = requests.get("http://0.0.0.0:5000/kujira/api/v1/calamari/clusters").json()
+        self.response = requests.get("http://0.0.0.0:5000/kujira/api/v1/calamari/" + self.type)
         self.data = self.response.json()
 
     def tearDown(self):
         self.clusters_data = None
-        self.clusters_id = None
         self.response = None
         self.data = None
-
-    def get_clusters_id(self):
-        """Using to get cluster id parameter
-        which will be used later to request for mons, pools and osds
-        :return: field id from clusters response
-        """
-        self.clusters_id = self.clusters_data['data']['id']
-        return self.clusters_id
 
     def test_expected_response(self):
         """Test for expected response:

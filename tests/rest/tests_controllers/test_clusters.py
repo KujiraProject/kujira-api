@@ -13,7 +13,7 @@ class ClustersTestCase(unittest.TestCase):
     data = None
 
     def setUp(self):
-        self.response = requests.get("http://0.0.0.0:5000/kujira/api/v1/clusters")
+        self.response = requests.get("http://0.0.0.0:5000/kujira/api/v1/calamari/clusters")
         self.data = self.response.json()
 
     def tearDown(self):
