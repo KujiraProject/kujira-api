@@ -22,7 +22,6 @@ class CalamariAPIConnectionTestCase(unittest.TestCase):
         response = client.get(constr._api_url, timeout=constr._timeout)
         self.assertEqual(response.status_code, 200)
 
-
     def test_error_422(self):
         """ Testing request with wrong Calamari API url:
             422 error is expected
@@ -37,7 +36,6 @@ class CalamariAPIConnectionTestCase(unittest.TestCase):
         except ConnectionError as err:
             response = create_error_422(constr._api_url, str(err))
         self.assertEqual(response.status_code, 422)
-
 
 if __name__ == '__main__':
     unittest.main()

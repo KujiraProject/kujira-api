@@ -12,17 +12,13 @@ class ClustersTestCase(unittest.TestCase):
     response = None
     data = None
 
-
     def setUp(self):
-        self.response = requests.get("http://0.0.0.0:5000/kujira/api/v1/" +
-                                     "clusters")
+        self.response = requests.get("http://0.0.0.0:5000/kujira/api/v1/" + "clusters")
         self.data = self.response.json()
-
 
     def tearDown(self):
         self.response = None
         self.data = None
-
 
     def test_expected_response(self):
         """Test for expected response:
@@ -31,7 +27,6 @@ class ClustersTestCase(unittest.TestCase):
         """
         self.assertEqual(self.response.status_code, 200)
         self.assertTrue(isinstance(self.data, dict))
-
 
     def test_consist_data_key(self):
         """Testing does response consist data key:
@@ -43,7 +38,6 @@ class ClustersTestCase(unittest.TestCase):
             }
         """
         self.assertIn('data', self.data)
-
 
     def test_expected_data_structure(self):
         """Testing does reponse structure is the same as expected:
@@ -60,7 +54,6 @@ class ClustersTestCase(unittest.TestCase):
         """
         self.assertTrue(isinstance(self.data['data'], dict))
         self.assertTrue(isinstance(self.data['data']['attributes'], dict))
-
 
     def test_keys_in_data_dictionary(self):
         """Testing keys in data dictionary:
@@ -81,7 +74,6 @@ class ClustersTestCase(unittest.TestCase):
         self.assertIn('type', self.data['data'])
         self.assertIn('id', self.data['data'])
 
-
     def test_type(self):
         """ "type": "clusters" test:
             {
@@ -94,7 +86,6 @@ class ClustersTestCase(unittest.TestCase):
             }
         """
         self.assertEqual(self.data['data']['type'], 'clusters')
-
 
     def test_expected_attributes_keys(self):
         """ Testing keys in "attributes" dictionary:
@@ -117,7 +108,6 @@ class ClustersTestCase(unittest.TestCase):
         self.assertIn('id', self.data['data']['attributes'])
         self.assertIn('name', self.data['data']['attributes'])
 
-
     def test_name(self):
         """ "name": "ceph" test:
             {
@@ -132,7 +122,6 @@ class ClustersTestCase(unittest.TestCase):
             }
         """
         self.assertEqual(self.data['data']['attributes']['name'], 'ceph')
-
 
 if __name__ == '__main__':
     unittest.main()
