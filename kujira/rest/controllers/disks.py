@@ -3,7 +3,11 @@ import json
 import re
 import threading
 
-import salt.client
+try:
+    import salt.client
+except ImportError:
+    class salt():
+        client = None
 
 from kujira import DISK_BP
 from kujira.rest.lib.request_methods import send_get

@@ -38,9 +38,12 @@ def check_fsid(before_fsid, after_fsid, parse_method):
 
 def get_fsid():
     """Request getting ceph fsid"""
-    response = send_get("/cluster")
-    response_dict = response[0]
-    if "id" in response_dict:
-        config.CEPH_FSID = response_dict["id"]
-    else:
-        config.CEPH_FSID = None
+    try:
+        response = send_get("/cluster")
+        response_dict = response[0]
+        if "id" in response_dict:
+            config.CEPH_FSID = response_dict["id"]
+        else:
+            config.CEPH_FSID = None
+    except:
+        pass
