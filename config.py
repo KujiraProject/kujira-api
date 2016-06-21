@@ -1,12 +1,11 @@
 """
 Configuration file.
 """
-
 DEBUG = True
 
 # Server config
 HOST = 'localhost'
-#HOST = '0.0.0.0'
+# HOST = '0.0.0.0'
 PORT = 5000
 
 # Secret key for signing cookies
@@ -22,4 +21,7 @@ CALAMARI_API_USER = "admin"
 CALAMARI_API_PWD = "kujira"
 
 # Default timetout when connecting calamari api
-CALAMARI_API_TIMEOUT = 2
+CALAMARI_API_TIMEOUT = 250
+
+# Default ceph fsid
+CEPH_FSID = None

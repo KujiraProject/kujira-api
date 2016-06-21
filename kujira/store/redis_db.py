@@ -1,6 +1,6 @@
 '''module for abstract redis management'''
 import redis
-from . import exceptions
+
 
 class RedisConnection(object):
     """base class for redis management"""
@@ -20,4 +20,4 @@ class RedisConnection(object):
         try:
             return bool(self.connection.ping())
         except redis.ConnectionError:
-            raise exceptions.ConnectionError('Cannot connect to database!')
+            return False

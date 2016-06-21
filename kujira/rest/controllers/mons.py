@@ -4,28 +4,21 @@ Methods mapped:
 - api/v2/clusters/fsid/mon/name
 - api/v2/clusters/fsid/mon/name/status"""
 
-from flask import Response
-
 from kujira.blueprints import MON_BP
-from kujira.rest.lib.parsing_methods import parse_and_return
-from kujira.rest.lib.request_methods import send_get
+from kujira.rest.lib.request_methods import check_fsid
 
 
-@MON_BP.route("/<fsid>")
-def all_monitors(fsid):
+@MON_BP.route("")
+def all_monitors():
     """Request for getting all monitors"""
-    response = send_get('cluster/' + fsid + '/mon')
-    if not isinstance(response, Response):
-        response = parse_and_return(parse_mons, response)
+    response = check_fsid('cluster/', '/mon', parse_mons)
     return response
 
 
-@MON_BP.route("/<fsid>/<name>")
-def monitor(fsid, name):
+@MON_BP.route("/<name>")
+def monitor(name):
     """Request for getting monitor of particular name"""
-    response = send_get('cluster/' + fsid + '/mon/' + name)
-    if not isinstance(parse_mons, Response):
-        response = parse_and_return(parse_mons, response)
+    response = check_fsid('cluster/', '/mon/'+name, parse_mons)
     return response
 
 

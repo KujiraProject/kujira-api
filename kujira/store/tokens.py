@@ -1,5 +1,7 @@
 """library to acces Mongo database allowing to insert and get tokens."""
 from . import redis_db
+from . import exceptions
+
 
 class RedisTokens(redis_db.RedisConnection):
     """token management class """
@@ -13,14 +15,14 @@ class RedisTokens(redis_db.RedisConnection):
             self.connection.lpush('token_queue',
                                   [user_name, str(random_value)])
         except redis_db.redis.ConnectionError:
-            raise redis_db.exceptions.ConnectionError('Cannot connect to database!')
+            raise exceptions.ConnectionError('Cannot connect to database!')
 
     def pop(self):
         """gets oldest token"""
         try:
             return self.connection.rpop('token_queue')
         except redis_db.redis.ConnectionError:
-            raise redis_db.exceptions.ConnectionError('Cannot connect to database!')
+            raise exceptions.ConnectionError('Cannot connect to database!')
 
     def get_token(self, user_name):
         """gets specified by user name token"""
@@ -31,4 +33,4 @@ class RedisTokens(redis_db.RedisConnection):
                 if token_string.split("'")[1] == user_name:
                     return token_string.split("'")[3]
         except redis_db.redis.ConnectionError:
-            raise redis_db.exceptions.ConnectionError('Cannot connect to database!')
+            raise exceptions.ConnectionError('Cannot connect to database!')
