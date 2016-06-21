@@ -11,10 +11,13 @@ from flask import Response
 
 def parse_and_return(method, response):
     """Method which is parsing response using appropriate method and creates JSON Response"""
-    output = method(response)
-    json_output = Response(json.dumps(output, indent=2),
-                           content_type='application/json')
-    return json_output
+    if type(response) is dict or type(response) is list:
+        output = method(response)
+        json_output = Response(json.dumps(output, indent=2),
+                               content_type='application/json')
+        return json_output
+    else:
+        return create_error_422("Response is not dict or list type.", response)
 
 
 def create_error_422(source, message):

@@ -3,28 +3,22 @@ Methods mapped:
 - api/v2/clusters/fsid/pool
 - api/v2/clusters/fsid/pool/pool_id"""
 
-from flask import Response
-
 from kujira.blueprints import POOL_BP
-from kujira.rest.lib.parsing_methods import parse_and_return, parse_cluster_pool
-from kujira.rest.lib.request_methods import send_get
+from kujira.rest.lib.parsing_methods import parse_cluster_pool
+from kujira.rest.lib.request_methods import check_fsid
 
 
-@POOL_BP.route("/<fsid>")
-def all_pools(fsid):
+@POOL_BP.route("")
+def all_pools():
     """Request for getting all pools"""
-    response = send_get('cluster/' + fsid + '/pool')
-    if not isinstance(response, Response):
-        response = parse_and_return(parse_pools, response)
+    response = check_fsid('cluster/', '/pool', parse_pools)
     return response
 
 
-@POOL_BP.route("/<fsid>/<int:pool_id>")
-def pool(fsid, pool_id):
+@POOL_BP.route("/<pool_id>")
+def pool(pool_id):
     """Request for pools monitor of particular id"""
-    response = send_get('cluster/' + fsid + '/pool/' + str(pool_id))
-    if not isinstance(response, Response):
-        response = parse_and_return(parse_pools, response)
+    response = check_fsid('cluster/', '/pool/' + str(pool_id), parse_pools)
     return response
 
 

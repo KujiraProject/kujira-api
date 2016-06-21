@@ -8,7 +8,7 @@ from flask import Response
 
 from kujira.blueprints import SERVER_BP
 from kujira.rest.lib.parsing_methods import parse_and_return
-from kujira.rest.lib.request_methods import send_get
+from kujira.rest.lib.request_methods import send_get, check_fsid
 
 
 @SERVER_BP.route("")
@@ -19,30 +19,18 @@ def all_servers():
         response = parse_and_return(parse_servers, response)
     return response
 
-@SERVER_BP.route("/<fsid>")
-def all_servers_cluster(fsid):
+
+@SERVER_BP.route("/ceph")
+def all_servers_cluster():
     """Request for getting all servers in a cluster"""
-    response = send_get('cluster/' + fsid + '/server')
-    if not isinstance(response, Response):
-        response = parse_and_return(parse_servers, response)
+    response = check_fsid('cluster/', '/server', parse_servers)
     return response
 
 
-@SERVER_BP.route("/<fsid>/<fqdn>")
-def server(fsid, fqdn):
+@SERVER_BP.route("/ceph/<hostname>")
+def server(hostname):
     """Request for getting server of particular fqdn and fsid"""
-    response = send_get('cluster/' + fsid + '/server/' + fqdn)
-    if not isinstance(response, Response):
-        response = parse_and_return(parse_servers, response)
-    return response
-
-
-@SERVER_BP.route("/<fqdn>")
-def server_fqdn(fqdn):
-    """Request for getting server of particular fqdn"""
-    response = send_get('/server/' + fqdn)
-    if response.status_code != 422:
-        response = parse_and_return(parse_servers, response)
+    response = check_fsid('cluster/', '/server/'+hostname, parse_servers)
     return response
 
 
@@ -78,7 +66,7 @@ def parse_server(server_dict):
             result['id'] = str(value)
         elif str(key) == 'services':
             relationships = []
-            for index in enumerate(value):
+            for index in range(len(value)):
                 if isinstance(value[index], dict):
                     new_relative = {'data': parse_server(value[index])}
                     relationships.append(new_relative)

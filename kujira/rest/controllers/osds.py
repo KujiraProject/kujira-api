@@ -3,28 +3,21 @@ Methods mapped:
 - api/v2/clusters/fsid/osd
 - api/v2/clusters/fsid/osd/osd_id"""
 
-from flask import Response
-
 from kujira.blueprints import OSD_BP
-from kujira.rest.lib.parsing_methods import parse_and_return
-from kujira.rest.lib.request_methods import send_get
+from kujira.rest.lib.request_methods import check_fsid
 
 
-@OSD_BP.route("/<fsid>")
-def all_osds(fsid):
+@OSD_BP.route("")
+def all_osds():
     """Request for getting all osds"""
-    response = send_get('cluster/' + fsid + '/osd')
-    if not isinstance(response, Response):
-        response = parse_and_return(parse_osds, response)
+    response = check_fsid('cluster/', '/osd', parse_osds)
     return response
 
 
-@OSD_BP.route("/<fsid>/<osd_id>")
-def osd(fsid, osd_id):
+@OSD_BP.route("/<osd_id>")
+def osd(osd_id):
     """Request for getting monitor of particular id"""
-    response = send_get('cluster/' + fsid + '/osd/' + osd_id)
-    if not isinstance(response, Response):
-        response = parse_and_return(parse_osds, response)
+    response = check_fsid('cluster/', '/osd/'+osd_id, parse_osds)
     return response
 
 
@@ -55,7 +48,7 @@ def parse_osd(osd_dict):
             attributes[key] = value
         elif isinstance(value, list):
             lst = []
-            for index in enumerate(value):
+            for index in range(len(value)):
                 if isinstance(value[index], dict):
                     lst.append(parse_osd(value[index]))
                 else:
