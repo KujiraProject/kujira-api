@@ -15,7 +15,7 @@ class CommonTestinglMethods(unittest.TestCase):
     expected_attributes = None
 
     def setUp(self):
-        self.clusters_data = requests.get("http://0.0.0.0:5000/kujira/api/v1/"+"clusters").json()
+        self.clusters_data = requests.get("http://0.0.0.0:5000/kujira/api/v1/clusters").json()
         self.clusters_id = self.get_clusters_id()
         self.response = requests.get("http://0.0.0.0:5000/kujira/api/v1/" + self.type + "/" + self.clusters_id)
         self.data = self.response.json()
