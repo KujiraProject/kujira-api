@@ -28,7 +28,6 @@ def check_fsid(before_fsid, after_fsid, parse_method):
     else:
         if config.CEPH_FSID is not None:
             url = before_fsid + config.CEPH_FSID + after_fsid
-            print url
             response = send_get(url)
             if not isinstance(response, Response):
                 response = parse_and_return(parse_method, response)
