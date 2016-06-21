@@ -8,7 +8,6 @@ import salt.utils.event
 import salt.client
 import salt.config
 import os
-
 LOG = logging.getLogger('executor')
 HANDLER = logging.FileHandler('/var/log/executor.log')
 FORMATTER = logging.Formatter('%(asctime)s %(levelname)s %(message)s')
@@ -16,14 +15,7 @@ HANDLER.setFormatter(FORMATTER)
 LOG.addHandler(HANDLER)
 
 FETCH_TIME = 10# interval to fetch next task
-pwd = os.getcwd()
-print(pwd)
-number = (len(pwd)-12)
-pwd = pwd[:number]+"kujira/store/"
-print(pwd)
-import sys
-sys.path.append(pwd)
-import tasks
+from kujira.store import tasks 
 
 def execute(subtask):
     """Function which execute tasks"""

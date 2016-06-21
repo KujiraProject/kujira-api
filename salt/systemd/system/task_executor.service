@@ -4,8 +4,9 @@ After=salt-master.service
 Wants=salt-master.service
 
 [Service]
-ExecStart=/usr/bin/python /srv/salt/scripts/task_executor.py
+ExecStart=/usr/bin/python /opt/kujira/salt/scripts/task_executor.py
 Restart=always
-
+Environment=\
+	PYTHONPATH=/opt/kujira
 [Install]
 WantedBy=multi-user.target
