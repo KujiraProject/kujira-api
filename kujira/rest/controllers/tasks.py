@@ -14,7 +14,7 @@ def all_tasks():
     tasks = []
     try:
         tasks = MONGO.get_all_tasks()
-    except ConnectionError err:
+    except ConnectionError as err:
         response = create_error_422("kujira.store.tasks", str(err))
             
     return parse_and_return(parse_tasks, tasks)
@@ -24,6 +24,8 @@ def parse_tasks(tasks):
     result = {}
     result["data"] = []
     for task in tasks:
+	task['date'] = str(task['date'])
+	task['_id'] = str(task['_id'])
         result["data"].append({
             "attributes": task,
             "id": task["_id"],
