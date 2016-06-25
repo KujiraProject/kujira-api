@@ -2,7 +2,8 @@
 
 from kujira.blueprints import TASKS_BP
 from kujira.store.tasks import Mongodb
-from kujira.rest.lib.parsing_methods.py import create_error_422, parse_and_return
+from kujira.rest.lib.parsing_methods import create_error_422, parse_and_return
+from kujira.store.exceptions import ConnectionError
 
 MONGO = Mongodb()
 MONGO.connect("mydb", "tasks", "oldTasks")

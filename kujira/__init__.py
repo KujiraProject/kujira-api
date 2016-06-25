@@ -6,7 +6,7 @@ from flask import Flask
 from flask_socketio import SocketIO
 
 from kujira.blueprints import SERVER_BP, OSD_BP, POOL_BP, MON_BP, CLUSTER_BP, DISK_BP, TASKS_BP
-from kujira.rest.controllers import osds, pools, servers, clusters, mons, disks
+from kujira.rest.controllers import osds, pools, servers, clusters, mons, disks, tasks
 from kujira.rest.lib.request_methods import get_fsid
 
 eventlet.monkey_patch()
